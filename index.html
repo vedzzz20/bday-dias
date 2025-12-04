@@ -1,207 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Happy 15th, Dias!</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Emilys+Candy&display=swap');
 
-body, html { margin:0; padding:0; overflow:hidden; font-family:'Emilys Candy', cursive; background:#1A1A1A;}
-#canvas { position:absolute; top:0; left:0; }
-#heartBtn {
-    position:absolute; top:50%; left:50%;
-    transform:translate(-50%,-50%);
-    font-size:200px; cursor:pointer;
-    color:white; z-index:10;
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'Emilys Candy', cursive;
+  background: #1A1A1A;
 }
-#popup {\n    perspective: 2000px;
-    position:absolute; top:50%; left:50%;
-    transform:translate(-50%,-50%);
-    width:80%; max-width:700px;
-    height:80%;
-    background:rgba(255,255,255,0.1);
-    border-radius:20px; padding:20px;
-    color:white; display:none; z-index:11;
-    overflow:hidden;
-    font-family:'Emilys Candy', cursive;
-    font-size:80px;
+#canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
+
+/* --- 3D BOOK --- */
+#bookContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  perspective: 2000px;
+  z-index: 20;
+}
+#book {
+  width: 420px;
+  height: 550px;
+  transform-style: preserve-3d;
+  position: relative;
+  cursor: pointer;
+}
+.bookCover {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  backface-visibility: hidden;
+  background: #ffffff15;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 80px;
+  color: white;
+  box-shadow: 0 10px 40px rgba(255,255,255,0.1);
+  transform-origin: left;
+  transition: transform 2s ease;
+}
+.bookCover h1 { margin: 0; font-size: 100px; }
+.bookCover .bow {
+  font-size: 70px;
+  margin-top: -40px;
+}
+
+/* Back of cover */
+#backCover {
+  transform: rotateY(-180deg);
+  background: #ffffff10;
+}
+
+/* Pages */
 .page {
-    position:absolute; top:0; left:0; width:100%; height:100%;
-    background:rgba(255,255,255,0.05);
-    display:flex; flex-direction:column; justify-content:center; align-items:center;
-    border-radius:20px;
-    backface-visibility:hidden;
-    transform-style:preserve-3d;
-    font-family:'Emilys Candy', cursive;
-    font-size:80px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #ffffff08;
+  border-radius: 20px;
+  backface-visibility: hidden;
+  transform-origin: left;
+  transition: transform 2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+  color: white;
+  font-size: 45px;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.3);
 }
-.page h2 { color:#FFD7ED; margin-bottom:10px; font-size:58px; font-family:'Emilys Candy', cursive; }
-.page p { color:#E9D7FF; font-size:48px; text-align:center; font-family:'Emilys Candy', cursive; }
+.page h2 { font-size: 70px; color: #FFD7ED; }
+
 </style>
 </head>
 <body>
 
 <canvas id="canvas"></canvas>
-<div id="heartBtn">🤍</div>
 
-<div id="popup">
-  <div class="page" id="page1">
-    <h2>DIAS</h2>
-    <p>The one and ONLY...</p>
-  </div>
-  <div class="page" id="page2">
-    <h2>F1</h2>
-    <p>Speed, style, chaos… that’s you!</p>
-  </div>
-  <div class="page" id="page3">
-    <h2>Music & Dance 🎶💃</h2>
-    <p>Your energy could power an F1 team!</p>
-  </div>
-  <div class="page" id="page4">
-    <h2>Food 🍰🍜</h2>
-    <p>Chef Dias: Certified foodie, part-time chaos engine.</p>
-  </div>
-  <div class="page" id="page5">
-    <h2>Books & Poetry 📖</h2>
-    <p style="font-style:italic;">“Dias, your smile shines brighter than rain on leaves,<br>Every laugh of yours, the heart believes.”</p>
-  </div>
-  <div class="page" id="page6">
-    <h2>From Pookie 💖</h2>
-    <p>Happy 15th Birthday, Dias! You make the world feel cozy and fun just by being you.</p>
+<!-- BOOK -->
+<div id="bookContainer">
+  <div id="book">
+    <div class="bookCover" id="frontCover">
+      🤍
+      <div class="bow">🎀</div>
+    </div>
+    <div class="bookCover" id="backCover"></div>
+
+    <div class="page" id="page1"><h2>DIAS</h2><p>The one and ONLY...</p></div>
+    <div class="page" id="page2"><h2>F1</h2><p>Speed, style, chaos… that’s you!</p></div>
+    <div class="page" id="page3"><h2>Music & Dance 🎶💃</h2><p>Your energy could power an F1 team!</p></div>
+    <div class="page" id="page4"><h2>Food 🍰🍜</h2><p>Chef Dias: Certified foodie, part-time chaos engine.</p></div>
+    <div class="page" id="page5"><h2>Books & Poetry 📖</h2><p style="font-style:italic;">“Dias, your smile shines brighter than rain on leaves,<br>Every laugh of yours, the heart believes.”</p></div>
+    <div class="page" id="page6"><h2>From Pookie 💖</h2><p>Happy 15th Birthday, Dias! You make the world feel cozy and fun just by being you.</p></div>
   </div>
 </div>
 
 <script>
+/* Canvas base from older version (rain + bows + cars) */
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.width = innerWidth;
+canvas.height = innerHeight;
 
-// F1 Car Images
-const carImage = new Image();
-carImage.src = './car'; // placeholder
+// Simple rain + bows (kept same)
+let rainDrops = [];
+for (let i=0;i<150;i++) rainDrops.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,l:10+Math.random()*20,s:2+Math.random()*3});
+function drawRain(){ ctx.strokeStyle='#A9C6FF'; ctx.lineWidth=2; rainDrops.forEach(r=>{ctx.beginPath();ctx.moveTo(r.x,r.y);ctx.lineTo(r.x,r.y+r.l);ctx.stroke();r.y+=r.s;if(r.y>canvas.height) r.y=-r.l;}); }
 
-// FIXED: ensure animation starts only when image loads
-carImage.onload = () => {
+class Bow { constructor(){this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;this.size=20+Math.random()*20;this.a=Math.random()*Math.PI*2;this.s=0.02+Math.random()*0.03;} draw(){ctx.save();ctx.translate(this.x,this.y);ctx.rotate(this.a);ctx.fillStyle='#FFD7ED';ctx.beginPath();ctx.moveTo(0,-this.size/2);ctx.lineTo(-this.size/2,0);ctx.lineTo(0,this.size/2);ctx.lineTo(this.size/2,0);ctx.closePath();ctx.fill();ctx.restore();} update(){this.a+=this.s;this.draw();}}
+let bows=[];for(let i=0;i<12;i++) bows.push(new Bow());
 
-  class Car {
-    constructor(){
-      this.x = -100;
-      this.y = 100 + Math.random()*canvas.height/2;
-      this.speed = 4 + Math.random()*3;
-      this.width = 200; this.height = 100;
-    }
-    draw(){ ctx.drawImage(carImage,this.x,this.y,this.width,this.height); }
-    update(){
-      this.x += this.speed;
-      if(this.x>canvas.width+100) this.x=-120;
-      this.draw();
-    }
-  }
+function animate(){ ctx.clearRect(0,0,canvas.width,canvas.height); drawRain(); bows.forEach(b=>b.update()); requestAnimationFrame(animate); }
+animate();
 
-  const cars = [];
-  for(let i=0;i<3;i++) cars.push(new Car());
+/* ---------- 3D OPENING BOOK LOGIC ---------- */
+const book = document.getElementById('book');
+const pages = document.querySelectorAll('.page');
+let opened = false;
+let currentPage = 0;
 
-  // FIXED BOWS: respawn when off-screen + float for life
-  class Bow {
-    constructor(){
-      this.reset();
-    }
-    reset(){
-      this.x = Math.random()*canvas.width;
-      this.y = Math.random()*canvas.height;
-      this.size = 20 + Math.random()*20;
-      this.angle = Math.random()*Math.PI*2;
-      this.speed = 0.02 + Math.random()*0.03;
-    }
-    draw(){
-      ctx.save(); ctx.translate(this.x,this.y); ctx.rotate(this.angle);
-      ctx.fillStyle="#FFD7ED";
-      ctx.beginPath(); ctx.moveTo(0,-this.size/2); ctx.lineTo(-this.size/2,0); ctx.lineTo(0,this.size/2); ctx.lineTo(this.size/2,0); ctx.closePath(); ctx.fill(); ctx.restore();
-    }
-    update(){
-      this.angle+=this.speed;
-      this.draw();
-    }
-  }
-  const bows=[];
-  for(let i=0;i<20;i++) bows.push(new Bow());
-
-  // FIXED RAIN: smooth + faster + wraps properly
-  const rainDrops = [];
-  for(let i=0;i<200;i++) rainDrops.push({
-    x:Math.random()*canvas.width,
-    y:Math.random()*canvas.height,
-    l:10+Math.random()*20,
-    s:4+Math.random()*4
-  });
-
-  function drawRain(){
-    ctx.strokeStyle='#A9C6FF';
-    ctx.lineWidth=2;
-    rainDrops.forEach(r=>{
-      ctx.beginPath();
-      ctx.moveTo(r.x,r.y);
-      ctx.lineTo(r.x,r.y+r.l);
-      ctx.stroke();
-      r.y+=r.s;
-      if(r.y>canvas.height) r.y=-r.l;
-    });
-  }
-
-  // Animate Canvas
-  function animate(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    drawRain();
-    cars.forEach(c=>c.update());
-    bows.forEach(b=>b.update());
-    requestAnimationFrame(animate);
-  }
-  animate();
-
-  // Pop-up book effect
-  const heartBtn = document.getElementById('heartBtn');
-  const popup = document.getElementById('popup');
-  const pages = document.querySelectorAll('.page');
-  let currentPage=0;
-
-  heartBtn.addEventListener('click',()=>{
-    popup.style.display='block';
-    heartBtn.style.display='none';
-    flipPage();
-  });
-
-  function flipPage(){
-    pages.forEach(p=>p.style.transition='transform 2s ease');
-    pages.forEach(p=>p.style.transform='rotateY(180deg)');
-    pages[currentPage].style.transform='rotateY(0deg)';
+book.addEventListener('click', () => {
+  if (!opened) {
+    // Open hardcover
+    document.getElementById('frontCover').style.transform = 'rotateY(-160deg)';
     setTimeout(()=>{
-      currentPage=(currentPage+1)%pages.length;
-      flipPage();
-    },6000);(()=>{
-      currentPage=(currentPage+1)%pages.length;
-      flipPage();
-    },3500);
+      flipPages();
+    }, 1800);
+    opened = true;
   }
+});
 
-  function spawnHearts(){
-    for(let i=0;i<30;i++){
-      const h=document.createElement('div'); h.innerText='🤍';
-      h.style.position='absolute'; h.style.left=Math.random()*window.innerWidth+'px';
-      h.style.top=Math.random()*window.innerHeight+'px';
-      h.style.fontSize=15+Math.random()*25+'px'; h.style.opacity=0.8;
-      h.style.fontFamily='"Emilys Candy", cursive';
-      document.body.appendChild(h);
-      let up=0; const interval=setInterval(()=>{
-        up+=1; h.style.top=(parseInt(h.style.top)-1)+'px';
-        if(up>150){clearInterval(interval);h.remove();}
-      },200);
-    }
-  }
-  spawnHearts();
-};
+function flipPages(){
+  pages[currentPage].style.transform = 'rotateY(0deg)';
+  setTimeout(()=>{
+    pages[currentPage].style.transform = 'rotateY(-160deg)';
+    currentPage = (currentPage + 1) % pages.length;
+    flipPages();
+  }, 5500);
+}
 </script>
+
 </body>
 </html>
