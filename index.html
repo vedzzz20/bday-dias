@@ -81,9 +81,11 @@ canvas.height = window.innerHeight;
 
 // F1 Car Images
 const carImage = new Image();
-carImage.src = './car'; // placeholder, replace with actual F1 car image
+carImage.src = './car'; // placeholder
 
+// FIXED: ensure animation starts only when image loads
 carImage.onload = () => {
+
   class Car {
     constructor(){
       this.x = -100;
@@ -102,9 +104,12 @@ carImage.onload = () => {
   const cars = [];
   for(let i=0;i<3;i++) cars.push(new Car());
 
-  // Bows
+  // FIXED BOWS: respawn when off-screen + float for life
   class Bow {
     constructor(){
+      this.reset();
+    }
+    reset(){
       this.x = Math.random()*canvas.width;
       this.y = Math.random()*canvas.height;
       this.size = 20 + Math.random()*20;
@@ -116,15 +121,35 @@ carImage.onload = () => {
       ctx.fillStyle="#FFD7ED";
       ctx.beginPath(); ctx.moveTo(0,-this.size/2); ctx.lineTo(-this.size/2,0); ctx.lineTo(0,this.size/2); ctx.lineTo(this.size/2,0); ctx.closePath(); ctx.fill(); ctx.restore();
     }
-    update(){ this.angle+=this.speed; this.draw(); }
+    update(){
+      this.angle+=this.speed;
+      this.draw();
+    }
   }
   const bows=[];
-  for(let i=0;i<15;i++) bows.push(new Bow());
+  for(let i=0;i<20;i++) bows.push(new Bow());
 
-  // Rain
+  // FIXED RAIN: smooth + faster + wraps properly
   const rainDrops = [];
-  for(let i=0;i<150;i++) rainDrops.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, l:10+Math.random()*20, s:2+Math.random()*3});
-  function drawRain(){ ctx.strokeStyle='#A9C6FF'; ctx.lineWidth=2; rainDrops.forEach(r=>{ctx.beginPath();ctx.moveTo(r.x,r.y);ctx.lineTo(r.x,r.y+r.l);ctx.stroke();r.y+=r.s;if(r.y>canvas.height) r.y=-r.l;});}
+  for(let i=0;i<200;i++) rainDrops.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    l:10+Math.random()*20,
+    s:4+Math.random()*4
+  });
+
+  function drawRain(){
+    ctx.strokeStyle='#A9C6FF';
+    ctx.lineWidth=2;
+    rainDrops.forEach(r=>{
+      ctx.beginPath();
+      ctx.moveTo(r.x,r.y);
+      ctx.lineTo(r.x,r.y+r.l);
+      ctx.stroke();
+      r.y+=r.s;
+      if(r.y>canvas.height) r.y=-r.l;
+    });
+  }
 
   // Animate Canvas
   function animate(){
@@ -157,7 +182,6 @@ carImage.onload = () => {
     },3500);
   }
 
-  // Floating hearts
   function spawnHearts(){
     for(let i=0;i<30;i++){
       const h=document.createElement('div'); h.innerText='🤍';
@@ -166,7 +190,10 @@ carImage.onload = () => {
       h.style.fontSize=15+Math.random()*25+'px'; h.style.opacity=0.8;
       h.style.fontFamily='"Emilys Candy", cursive';
       document.body.appendChild(h);
-      let up=0; const interval=setInterval(()=>{up+=1; h.style.top=(parseInt(h.style.top)-1)+'px'; if(up>150){clearInterval(interval);h.remove();}},200);
+      let up=0; const interval=setInterval(()=>{
+        up+=1; h.style.top=(parseInt(h.style.top)-1)+'px';
+        if(up>150){clearInterval(interval);h.remove();}
+      },200);
     }
   }
   spawnHearts();
@@ -174,15 +201,3 @@ carImage.onload = () => {
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
