@@ -4,32 +4,111 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Happy 15th, Dias!</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Emilys+Candy&display=swap');
 
+<!-- Font -->
+<link href="https://fonts.googleapis.com/css2?family=Emilys+Candy&display=swap" rel="stylesheet">
+
+<style>
+/* GLOBAL */
+* { margin:0; padding:0; box-sizing:border-box; }
 body, html {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
   font-family: 'Emilys Candy', cursive;
   background: #1A1A1A;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
-#canvas {
+/* LANDING PAGE */
+#landing {
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle, #ffbfe6 0%, #1a1a1a 70%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+}
+
+#landing h1 {
+  font-size: 90px;
+  color: #ffe4f4;
+  text-shadow: 0 0 25px #ff9ada, 0 0 40px #ff4dc4;
+  animation: glow 2.5s ease-in-out infinite alternate;
+}
+
+#landing p {
+  font-size: 35px;
+  margin-top: 20px;
+  color: #ffd8ef;
+  opacity: 0;
+  animation: fadeIn 2s 1.5s forwards;
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 20px #ff8dd8; }
+  to   { text-shadow: 0 0 40px #ff4dc4; }
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+#enterBtn {
+  margin-top: 50px;
+  padding: 20px 50px;
+  font-size: 40px;
+  border: none;
+  border-radius: 20px;
+  background: #ffd3e9;
+  color: #1a1a1a;
+  cursor: pointer;
+  box-shadow: 0 0 20px #ff9eda, 0 0 40px #ff4dc4;
+  transition: 0.3s ease;
+  opacity: 0;
+  animation: fadeIn 2s 2.5s forwards;
+}
+
+#enterBtn:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 30px #ffa3e3, 0 0 50px #ff4dc4;
+}
+
+/* FLOATING HEARTS */
+.heart {
   position: absolute;
+  color: #ffb2dd;
+  font-size: 25px;
+  animation: floatUp 6s linear infinite;
+  opacity: 0.7;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0) scale(1) rotate(0); opacity: 0.2; }
+  50% { opacity: 1; }
+  100% { transform: translateY(-800px) scale(1.3) rotate(360deg); opacity: 0; }
+}
+
+/* CANVAS */
+#canvas {
+  position: fixed;
   top: 0;
   left: 0;
-  z-index: 0;
+  z-index: -2;
+  pointer-events: none;
 }
 
-/* ------------ BOOK FIXES (NO LOGIC CHANGED) ----------------- */
+/* -------------------- BOOK -------------------- */
+/* KEEP EXACT BOOK CODE */
 #bookContainer {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0.85); /* MEDIUM SIZE */
-  perspective: 2000px; /* CLEANER DEPTH */
+  transform: translate(-50%, -50%) scale(0.85);
+  perspective: 2000px;
   z-index: 20;
+  margin-top: 0; /* overridden by scroll later */
 }
 
 #book {
@@ -59,16 +138,10 @@ body, html {
   z-index: 999;
 }
 
-/* Reduced translateZ → fixes overlapping */
-#frontCover {
-  transform: rotateY(0deg) translateZ(80px);
-}
+#frontCover { transform: rotateY(0deg) translateZ(80px); }
+#backCover { transform: rotateY(-180deg) translateZ(80px); }
 
-#backCover {
-  transform: rotateY(-180deg) translateZ(80px);
-}
-
-/* CLEAN 3D STACK — perfectly spaced */
+/* PAGES */
 .page {
   position: absolute;
   width: 100%;
@@ -90,13 +163,9 @@ body, html {
   z-index: 100;
 }
 
-/* TITLE */
-.page h2 {
-  font-size: 70px;
-  color: #FFD7ED;
-}
+.page h2 { font-size: 70px; color: #FFD7ED; }
 
-/* PERFECT PAGE STACK — evenly spaced */
+/* STACK */
 #page1 { transform: rotateY(180deg) translateZ(70px); }
 #page2 { transform: rotateY(180deg) translateZ(60px); }
 #page3 { transform: rotateY(180deg) translateZ(50px); }
@@ -122,14 +191,39 @@ body, html {
   z-index: 30;
 }
 
-#nextPage:hover {
-  transform: translateX(-50%) scale(1.1);
-}
+#nextPage:hover { transform: translateX(-50%) scale(1.1); }
 
 </style>
 </head>
 <body>
 
+<!-- MUSIC -->
+<audio id="audio" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_648faadadf.mp3?filename=romantic-piano-ambient-110416.mp3">
+</audio>
+
+<!-- LANDING PAGE -->
+<div id="landing">
+  <h1>Happy 15th Birthday, Dias 🎀💖</h1>
+  <p>You’re stepping into your magical world ✨</p>
+  <button id="enterBtn">Enter</button>
+</div>
+
+<!-- FLOATING HEARTS -->
+<script>
+for(let i=0;i<40;i++){
+  let h=document.createElement("div");
+  h.classList.add("heart");
+  h.innerHTML="💖";
+  h.style.left=Math.random()*100+"vw";
+  h.style.bottom="-50px";
+  h.style.animationDuration=4+Math.random()*5+"s";
+  h.style.fontSize=20+Math.random()*40+"px";
+  document.body.appendChild(h);
+}
+</script>
+
+<!-- CANVAS BACKGROUND -->
 <canvas id="canvas"></canvas>
 
 <!-- BOOK -->
@@ -157,7 +251,7 @@ body, html {
 <button id="nextPage">>>></button>
 
 <script>
-/* ---------- BACKGROUND (unchanged) ----------- */
+/* ---------- CANVAS ANIMATION ----------- */
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 canvas.width = innerWidth;
@@ -217,49 +311,46 @@ function animate(){
 }
 animate();
 
-/* ----------- PAGE LOGIC (NOT CHANGED AT ALL) ----------- */
+/* ----------- BOOK PAGE LOGIC ----------- */
 const pages = [...document.querySelectorAll('.page')];
 const cover = document.getElementById('frontCover');
-
 let index = -1;
 
 document.getElementById('nextPage').addEventListener('click', () => {
-
   if(index === -1){
     cover.style.transform = 'rotateY(-160deg) translateZ(80px)';
     cover.style.zIndex = 0;
     index = 0;
     return;
   }
-
   if(index < pages.length){
     if(index > 0){
       const old = pages[index-1];
       old.style.transform = `rotateY(180deg) translateZ(${70-(index-1)*10}px)`;
       old.style.zIndex = 0;
     }
-
     const p = pages[index];
     p.style.transform = 'rotateY(0deg) translateZ(80px)';
     p.style.zIndex = 10;
-
     index++;
     return;
   }
-
   /* Reset */
   cover.style.transform = 'rotateY(0deg) translateZ(80px)';
   cover.style.zIndex = 999;
-
   pages.forEach((p,i)=>{
     p.style.transform = `rotateY(180deg) translateZ(${70-i*10}px)`;
     p.style.zIndex = 100;
   });
-
   index = -1;
+});
+
+/* -------- ENTER BUTTON LOGIC -------- */
+document.getElementById("enterBtn").addEventListener("click",()=>{
+  window.scrollTo({top:window.innerHeight,behavior:"smooth"});
+  document.getElementById("audio").play().catch(()=>{});
 });
 </script>
 
 </body>
 </html>
-
