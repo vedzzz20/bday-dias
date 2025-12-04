@@ -60,7 +60,7 @@ body, html {
 .bookCover h1 { margin: 0; font-size: 100px; }
 .bookCover .bow { font-size: 70px; margin-top: -40px; }
 
-#frontCover { transform: rotateY(0deg) translateZ(40px); }
+#frontCover { transform: rotateY(0deg) translateZ(40px); z-index:10; }
 #backCover { transform: rotateY(-180deg) translateZ(40px); }
 
 /* PAGES */
@@ -72,7 +72,7 @@ body, html {
   border-radius: 20px;
   backface-visibility: hidden;
   transform-origin: left;
-  transition: transform 1.5s ease, box-shadow 0.5s ease;
+  transition: transform 1.5s ease, box-shadow 0.5s ease, z-index 0.3s ease;
   padding: 20px;
   text-align: center;
   color: white;
@@ -82,6 +82,7 @@ body, html {
   justify-content: center;
   align-items: center;
   box-shadow: inset 0 0 40px rgba(0,0,0,0.3);
+  z-index:0;
 }
 
 .page h2 {
@@ -207,7 +208,7 @@ function animate(){
 }
 animate();
 
-/* ------------------- BOOK PAGE FLIP ------------------- */
+/* ------------------- BOOK PAGE FLIP + STACKING ------------------- */
 const allPages = [...document.querySelectorAll('.page')];
 const frontCover = document.getElementById('frontCover');
 let currentPage = -1;
@@ -217,15 +218,29 @@ document.getElementById('nextPage').addEventListener('click', () => {
     frontCover.style.transform = 'rotateY(-160deg) translateZ(40px)';
     currentPage = 0;
   } else if(currentPage < allPages.length){
+    // Move previous page behind
+    if(currentPage > 0){
+      allPages[currentPage-1].style.zIndex = 0; 
+    } else {
+      frontCover.style.zIndex = 0;
+    }
+
+    // Bring current page on top
     const page = allPages[currentPage];
+    page.style.zIndex = 10;
     page.style.transform = 'rotateY(0deg) translateZ(30px)';
     page.style.boxShadow = '0 0 30px #FFD7ED, inset 0 0 40px rgba(0,0,0,0.3)';
+
     currentPage++;
   } else {
-    // Reset
+    // Reset all pages
     frontCover.style.transform = 'rotateY(0deg) translateZ(40px)';
-    allPages.forEach((p, idx) => p.style.transform = `rotateY(180deg) translateZ(${30-idx*10}px)`);
-    allPages.forEach(p => p.style.boxShadow = 'inset 0 0 40px rgba(0,0,0,0.3)');
+    frontCover.style.zIndex = 10;
+    allPages.forEach((p, idx) => {
+      p.style.transform = `rotateY(180deg) translateZ(${30-idx*10}px)`;
+      p.style.zIndex = 0;
+      p.style.boxShadow = 'inset 0 0 40px rgba(0,0,0,0.3)';
+    });
     currentPage = -1;
   }
 });
@@ -301,7 +316,6 @@ function animateSparkles(){
   requestAnimationFrame(animateSparkles);
 }
 animateSparkles();
-
 </script>
 </body>
 </html>
