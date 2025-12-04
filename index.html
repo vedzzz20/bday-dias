@@ -35,7 +35,7 @@ body, html {
   height: 550px;
   transform-style: preserve-3d;
   position: relative;
-  cursor: pointer;
+  cursor: default;
 }
 
 /* FRONT & BACK HARD COVERS */
@@ -54,7 +54,7 @@ body, html {
   color: white;
   box-shadow: 0 10px 40px rgba(255,255,255,0.1);
   transform-origin: left;
-  transition: transform 2s ease;
+  transition: transform 1.5s ease;
 }
 
 .bookCover h1 { margin: 0; font-size: 100px; }
@@ -72,7 +72,7 @@ body, html {
   border-radius: 20px;
   backface-visibility: hidden;
   transform-origin: left;
-  transition: transform 1.8s ease, box-shadow 0.5s ease;
+  transition: transform 1.5s ease, box-shadow 0.5s ease;
   padding: 20px;
   text-align: center;
   color: white;
@@ -98,6 +98,25 @@ body, html {
 #page5 { transform: rotateY(180deg) translateZ(-10px); }
 #page6 { transform: rotateY(180deg) translateZ(-20px); }
 
+/* BUTTON */
+#nextPage {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 15px 30px;
+  font-size: 30px;
+  border: none;
+  border-radius: 10px;
+  background: #FFD7ED;
+  color: #1A1A1A;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(255,215,237,0.5);
+  transition: transform 0.2s ease;
+  z-index: 30;
+}
+#nextPage:hover { transform: translateX(-50%) scale(1.1); }
+
 </style>
 </head>
 <body>
@@ -118,12 +137,17 @@ body, html {
     <div class="page" id="page3"><h2>Music & Dance 🎶💃</h2><p>Your energy could power an F1 team!</p></div>
     <div class="page" id="page4"><h2>Food 🍰🍜</h2><p>Chef Dias: Certified foodie, part-time chaos engine.</p></div>
     <div class="page" id="page5"><h2>Books & Poetry 📖</h2><p style="font-style:italic;">“Dias, your smile shines brighter than rain on leaves,<br>Every laugh of yours, the heart believes.”</p></div>
-    <div class="page" id="page6"><h2>From Vedant 💖</h2><p>Happy 15th Birthday, Dias! You make the world feel cozy and fun just by being you.</p></div>
+    <div class="page" id="page6">
+      <h2 id="pookieText">From Pookie 💖🎀</h2>
+      <p>Happy 15th Birthday, Dias! You make the world feel cozy and fun just by being you.</p>
+    </div>
   </div>
 </div>
 
+<button id="nextPage">>>></button>
+
 <script>
-/* --------- CANVAS BACKGROUND (RAIN + BOWS) --------- */
+/* --------- CANVAS BACKGROUND (RAIN + BOW SPIN) --------- */
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 canvas.width = innerWidth;
@@ -175,13 +199,6 @@ class Bow {
 let bows=[];
 for(let i=0;i<12;i++) bows.push(new Bow());
 
-document.addEventListener('mousemove', e => {
-  bows.forEach(b => {
-    b.x += (e.clientX - b.x) * 0.01;
-    b.y += (e.clientY - b.y) * 0.01;
-  });
-});
-
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   drawRain();
@@ -190,42 +207,101 @@ function animate(){
 }
 animate();
 
-/* ------------------- BOOK OPEN + PAGE FLIP ------------------- */
-const book = document.getElementById('book');
+/* ------------------- BOOK PAGE FLIP ------------------- */
 const allPages = [...document.querySelectorAll('.page')];
-let opened = false;
+const frontCover = document.getElementById('frontCover');
+let currentPage = -1;
 
-book.addEventListener('click', () => {
-  if (opened) return;
-  opened = true;
-
-  const frontCover = document.getElementById('frontCover');
-  frontCover.style.transform = 'rotateY(-160deg) translateZ(40px)';
-
-  let i = 0;
-  function flip() {
-    const page = allPages[i];
+document.getElementById('nextPage').addEventListener('click', () => {
+  if(currentPage === -1){
+    frontCover.style.transform = 'rotateY(-160deg) translateZ(40px)';
+    currentPage = 0;
+  } else if(currentPage < allPages.length){
+    const page = allPages[currentPage];
     page.style.transform = 'rotateY(0deg) translateZ(30px)';
-    page.style.boxShadow = '0 0 30px #FFD7ED, inset 0 0 40px rgba(0,0,0,0.3)'; // glow
-    setTimeout(() => {
-      page.style.transform = 'rotateY(-160deg) translateZ(30px)';
-      page.style.boxShadow = 'inset 0 0 40px rgba(0,0,0,0.3)';
-      i++;
-      if (i < allPages.length) flip();
-      else {
-        // Reset
-        setTimeout(() => {
-          frontCover.style.transform = 'rotateY(0deg) translateZ(40px)';
-          allPages.forEach((p, idx) => p.style.transform = `rotateY(180deg) translateZ(${30-idx*10}px)`);
-          opened = false;
-        }, 2000);
-      }
-    }, 4200);
+    page.style.boxShadow = '0 0 30px #FFD7ED, inset 0 0 40px rgba(0,0,0,0.3)';
+    currentPage++;
+  } else {
+    // Reset
+    frontCover.style.transform = 'rotateY(0deg) translateZ(40px)';
+    allPages.forEach((p, idx) => p.style.transform = `rotateY(180deg) translateZ(${30-idx*10}px)`);
+    allPages.forEach(p => p.style.boxShadow = 'inset 0 0 40px rgba(0,0,0,0.3)');
+    currentPage = -1;
   }
-
-  setTimeout(flip, 1800);
 });
-</script>
 
+/* --- SPARKLES AROUND Pookie --- */
+const pookieText = document.getElementById('pookieText');
+const sparkleCanvas = document.createElement('canvas');
+sparkleCanvas.style.position = 'absolute';
+sparkleCanvas.style.pointerEvents = 'none';
+sparkleCanvas.style.left = '0';
+sparkleCanvas.style.top = '0';
+document.body.appendChild(sparkleCanvas);
+const sparkleCtx = sparkleCanvas.getContext('2d');
+
+function resizeSparkleCanvas() {
+  sparkleCanvas.width = window.innerWidth;
+  sparkleCanvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeSparkleCanvas);
+resizeSparkleCanvas();
+
+class Sparkle {
+  constructor(x, y){
+    this.x = x + (Math.random()*40 - 20);
+    this.y = y + (Math.random()*20 - 10);
+    this.size = 4 + Math.random()*3;
+    this.alpha = 1;
+    this.s = 0.02 + Math.random()*0.03;
+    this.vx = (Math.random()-0.5)*0.5;
+    this.vy = (Math.random()-0.5)*0.5;
+  }
+  draw() {
+    sparkleCtx.save();
+    sparkleCtx.globalAlpha = this.alpha;
+    sparkleCtx.fillStyle = '#FFD7ED';
+    sparkleCtx.beginPath();
+    sparkleCtx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+    sparkleCtx.fill();
+    sparkleCtx.restore();
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    this.alpha -= this.s;
+    if(this.alpha <= 0){
+      this.alpha = 1;
+      this.x = this.originX + (Math.random()*40 - 20);
+      this.y = this.originY + (Math.random()*20 - 10);
+    }
+    this.draw();
+  }
+  setOrigin(x,y){
+    this.originX = x;
+    this.originY = y;
+    this.x = x + (Math.random()*40 - 20);
+    this.y = y + (Math.random()*20 - 10);
+  }
+}
+
+let sparkles = [];
+for(let i=0;i<30;i++) sparkles.push(new Sparkle(0,0));
+
+function animateSparkles(){
+  sparkleCtx.clearRect(0,0,sparkleCanvas.width,sparkleCanvas.height);
+  // Only show sparkles on last page
+  if(currentPage === allPages.length){
+    const rect = pookieText.getBoundingClientRect();
+    sparkles.forEach(s=>{
+      s.setOrigin(rect.left + rect.width/2, rect.top + rect.height/2);
+      s.update();
+    });
+  }
+  requestAnimationFrame(animateSparkles);
+}
+animateSparkles();
+
+</script>
 </body>
 </html>
