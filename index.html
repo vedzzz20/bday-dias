@@ -8,115 +8,84 @@
 @import url('https://fonts.googleapis.com/css2?family=Emilys+Candy&display=swap');
 
 body, html {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  font-family: 'Emilys Candy', cursive;
-  background: #1A1A1A;
+  margin:0; padding:0; overflow:hidden;
+  font-family:'Emilys Candy', cursive; background:#1A1A1A;
 }
-#canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
+#canvas { position:absolute; top:0; left:0; z-index:0; }
 
 /* --- 3D BOOK --- */
 #bookContainer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  perspective: 2000px;
-  z-index: 20;
+  position:absolute; top:50%; left:50%;
+  transform:translate(-50%, -50%);
+  perspective:2000px;
+  z-index:10;
 }
 
 #book {
-  width: 420px;
-  height: 550px;
-  transform-style: preserve-3d;
-  position: relative;
-  cursor: default;
+  width:420px; height:550px;
+  transform-style:preserve-3d;
+  position:relative;
 }
 
-/* FRONT & BACK HARD COVERS */
+.bookCover, .page {
+  width:100%; height:100%;
+  position:absolute;
+  backface-visibility:hidden;
+  border-radius:20px;
+  display:flex; justify-content:center; align-items:center;
+  flex-direction:column;
+  text-align:center;
+  color:white;
+  box-shadow:0 10px 40px rgba(0,0,0,0.3);
+  font-family:'Emilys+Candy', cursive;
+}
+
 .bookCover {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  backface-visibility: hidden;
-  background: #ffffff15;
-  border-radius: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  font-size: 80px;
-  color: white;
-  box-shadow: 0 10px 40px rgba(255,255,255,0.1);
-  transform-origin: left;
-  transition: transform 1.5s ease;
+  background:#ffffff15;
+  font-size:80px;
+  transform-origin:left;
+  transition:transform 1.5s ease;
 }
+.bookCover .bow { font-size:70px; margin-top:-40px; }
 
-.bookCover h1 { margin: 0; font-size: 100px; }
-.bookCover .bow { font-size: 70px; margin-top: -40px; }
+#backCover { transform:rotateY(-180deg); background:#ffffff10; }
 
-#frontCover { transform: rotateY(0deg) translateZ(40px); z-index:10; }
-#backCover { transform: rotateY(-180deg) translateZ(40px); }
-
-/* PAGES */
 .page {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: #ffffff08;
-  border-radius: 20px;
-  backface-visibility: hidden;
-  transform-origin: left;
-  transition: transform 1.5s ease, box-shadow 0.5s ease, z-index 0.3s ease;
-  padding: 20px;
-  text-align: center;
-  color: white;
-  font-size: 45px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  box-shadow: inset 0 0 40px rgba(0,0,0,0.3);
-  z-index:0;
+  background:#ffffff08;
+  font-size:45px;
+  transform-origin:left;
+  transform:rotateY(-180deg);
+  transition:transform .9s ease;
+  padding:20px;
+  box-shadow:inset 0 0 40px rgba(0,0,0,0.3);
+}
+.page h2 { font-size:70px; color:#FFD7ED; margin:10px 0; }
+.page p { font-size:40px; margin:5px 0; }
+
+.page.glow {
+  box-shadow:0 0 30px #FFD7ED, 0 0 50px #FFB8FF;
 }
 
-.page h2 {
-  font-size: 70px;
-  color: #FFD7ED;
-  margin-bottom: 20px;
+/* Bookmark */
+#bookmark {
+  position:absolute; top:20px; right:10px;
+  width:30px; height:100px; background:#FF69B4;
+  clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%);
+  z-index:15;
+  display:flex; justify-content:center;
+  font-size:25px;
 }
 
-/* PAGE STACK */
-#page1 { transform: rotateY(180deg) translateZ(30px); }
-#page2 { transform: rotateY(180deg) translateZ(20px); }
-#page3 { transform: rotateY(180deg) translateZ(10px); }
-#page4 { transform: rotateY(180deg) translateZ(0px); }
-#page5 { transform: rotateY(180deg) translateZ(-10px); }
-#page6 { transform: rotateY(180deg) translateZ(-20px); }
-
-/* BUTTON */
-#nextPage {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 15px 30px;
-  font-size: 30px;
-  border: none;
-  border-radius: 10px;
-  background: #FFD7ED;
-  color: #1A1A1A;
-  cursor: pointer;
-  box-shadow: 0 5px 15px rgba(255,215,237,0.5);
-  transition: transform 0.2s ease;
-  z-index: 30;
+/* Buttons */
+#nextBtn, #resetBtn, #soundToggle {
+  position:absolute; z-index:20;
+  font-size:40px; cursor:pointer; color:white;
+  user-select:none;
+  text-shadow:0 0 10px #000;
 }
-#nextPage:hover { transform: translateX(-50%) scale(1.1); }
+#nextBtn { bottom:20px; right:20px; }
+#resetBtn { bottom:20px; left:20px; font-size:45px; }
+#soundToggle { top:20px; left:20px; }
 
 </style>
 </head>
@@ -124,13 +93,10 @@ body, html {
 
 <canvas id="canvas"></canvas>
 
-<!-- BOOK -->
+<!-- 3D Book -->
 <div id="bookContainer">
   <div id="book">
-    <div class="bookCover" id="frontCover">
-      🤍
-      <div class="bow">🎀</div>
-    </div>
+    <div class="bookCover" id="frontCover">🤍<div class="bow">🎀</div></div>
     <div class="bookCover" id="backCover"></div>
 
     <div class="page" id="page1"><h2>DIAS</h2><p>The one and ONLY...</p></div>
@@ -138,25 +104,32 @@ body, html {
     <div class="page" id="page3"><h2>Music & Dance 🎶💃</h2><p>Your energy could power an F1 team!</p></div>
     <div class="page" id="page4"><h2>Food 🍰🍜</h2><p>Chef Dias: Certified foodie, part-time chaos engine.</p></div>
     <div class="page" id="page5"><h2>Books & Poetry 📖</h2><p style="font-style:italic;">“Dias, your smile shines brighter than rain on leaves,<br>Every laugh of yours, the heart believes.”</p></div>
-    <div class="page" id="page6">
-      <h2 id="pookieText">From Pookie 💖🎀</h2>
-      <p>Happy 15th Birthday, Dias! You make the world feel cozy and fun just by being you.</p>
-    </div>
+    <div class="page" id="page6"><h2>From Pookie 💖</h2><p>Happy 15th Birthday, Dias! You make the world feel cozy and fun just by being you.</p></div>
   </div>
+
+  <div id="bookmark">🎀</div>
+
+  <div id="nextBtn">>>></div>
+  <div id="resetBtn">🔄</div>
+  <div id="soundToggle">🔊</div>
 </div>
 
-<button id="nextPage">>>></button>
-
 <script>
-/* --------- CANVAS BACKGROUND (RAIN + BOW SPIN) --------- */
+/* --- CANVAS BACKGROUND --- */
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
-let rainDrops = [];
-for (let i=0;i<150;i++) {
-  rainDrops.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,l:10+Math.random()*20,s:2+Math.random()*3});
+let rainDrops=[], bows=[];
+
+for(let i=0;i<150;i++){
+  rainDrops.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    l:10+Math.random()*20,
+    s:2+Math.random()*3
+  });
 }
 
 function drawRain(){
@@ -197,7 +170,6 @@ class Bow {
   update(){ this.a+=this.s; this.draw(); }
 }
 
-let bows=[];
 for(let i=0;i<12;i++) bows.push(new Bow());
 
 function animate(){
@@ -208,118 +180,74 @@ function animate(){
 }
 animate();
 
-/* ------------------- BOOK PAGE FLIP + STACKING + DISAPPEAR PREV PAGE ------------------- */
-const allPages = [...document.querySelectorAll('.page')];
+/* ------- BOOK LOGIC ------- */
+const pages = document.querySelectorAll('.page');
 const frontCover = document.getElementById('frontCover');
-let currentPage = -1;
+let currentPage = 0;
+let opened = false;
+let soundOn = true;
 
-document.getElementById('nextPage').addEventListener('click', () => {
-  if(currentPage === -1){
-    frontCover.style.transform = 'rotateY(-160deg) translateZ(40px)';
-    currentPage = 0;
-  } else if(currentPage < allPages.length){
-    // Move previous page away
-    if(currentPage > 0){
-      const prevPage = allPages[currentPage-1];
-      prevPage.style.transform = `rotateY(180deg) translateZ(${30-(currentPage-1)*10}px)`;
-      prevPage.style.zIndex = 0;
-      prevPage.style.boxShadow = 'inset 0 0 40px rgba(0,0,0,0.3)';
-    } else {
-      frontCover.style.zIndex = 0;
-      frontCover.style.transform = 'rotateY(0deg) translateZ(40px)';
-    }
+/* Sounds */
+const sounds = {
+  open: new Audio('https://freesound.org/data/previews/522/522498_1166496-lq.mp3'),
+  flip: new Audio('https://freesound.org/data/previews/331/331912_3248244-lq.mp3'),
+  close: new Audio('https://freesound.org/data/previews/435/435051_7037-lq.mp3'),
+  sparkle: new Audio('https://freesound.org/data/previews/146/146725_2614175-lq.mp3')
+};
+for(let s in sounds) sounds[s].volume = 0.25;
 
-    // Bring current page on top
-    const page = allPages[currentPage];
-    page.style.zIndex = 10;
-    page.style.transform = 'rotateY(0deg) translateZ(30px)';
-    page.style.boxShadow = '0 0 30px #FFD7ED, inset 0 0 40px rgba(0,0,0,0.3)';
-
-    currentPage++;
-  } else {
-    // Reset all pages
-    frontCover.style.transform = 'rotateY(0deg) translateZ(40px)';
-    frontCover.style.zIndex = 10;
-    allPages.forEach((p, idx) => {
-      p.style.transform = `rotateY(180deg) translateZ(${30-idx*10}px)`;
-      p.style.zIndex = 0;
-      p.style.boxShadow = 'inset 0 0 40px rgba(0,0,0,0.3)';
-    });
-    currentPage = -1;
+/* OPEN BOOK */
+frontCover.addEventListener('click',()=>{
+  if(!opened){
+    frontCover.style.transform='rotateY(-160deg)';
+    if(soundOn) sounds.open.play();
+    pages[0].style.transform='rotateY(0deg)';
+    pages[0].classList.add('glow');
+    opened = true;
   }
 });
 
-/* --- SPARKLES AROUND Pookie --- */
-const pookieText = document.getElementById('pookieText');
-const sparkleCanvas = document.createElement('canvas');
-sparkleCanvas.style.position = 'absolute';
-sparkleCanvas.style.pointerEvents = 'none';
-sparkleCanvas.style.left = '0';
-sparkleCanvas.style.top = '0';
-document.body.appendChild(sparkleCanvas);
-const sparkleCtx = sparkleCanvas.getContext('2d');
+/* PAGE TURN */
+function flipPage(){
+  if(!opened) return;
 
-function resizeSparkleCanvas() {
-  sparkleCanvas.width = window.innerWidth;
-  sparkleCanvas.height = window.innerHeight;
-}
-window.addEventListener('resize', resizeSparkleCanvas);
-resizeSparkleCanvas();
+  pages[currentPage].classList.remove('glow');
+  pages[currentPage].style.transform='rotateY(-160deg)';
+  if(soundOn) sounds.flip.play();
 
-class Sparkle {
-  constructor(x, y){
-    this.x = x + (Math.random()*40 - 20);
-    this.y = y + (Math.random()*20 - 10);
-    this.size = 4 + Math.random()*3;
-    this.alpha = 1;
-    this.s = 0.02 + Math.random()*0.03;
-    this.vx = (Math.random()-0.5)*0.5;
-    this.vy = (Math.random()-0.5)*0.5;
-  }
-  draw() {
-    sparkleCtx.save();
-    sparkleCtx.globalAlpha = this.alpha;
-    sparkleCtx.fillStyle = '#FFD7ED';
-    sparkleCtx.beginPath();
-    sparkleCtx.arc(this.x, this.y, this.size, 0, Math.PI*2);
-    sparkleCtx.fill();
-    sparkleCtx.restore();
-  }
-  update() {
-    this.x += this.vx;
-    this.y += this.vy;
-    this.alpha -= this.s;
-    if(this.alpha <= 0){
-      this.alpha = 1;
-      this.x = this.originX + (Math.random()*40 - 20);
-      this.y = this.originY + (Math.random()*20 - 10);
-    }
-    this.draw();
-  }
-  setOrigin(x,y){
-    this.originX = x;
-    this.originY = y;
-    this.x = x + (Math.random()*40 - 20);
-    this.y = y + (Math.random()*20 - 10);
-  }
+  currentPage = (currentPage+1) % pages.length;
+  pages[currentPage].style.transform='rotateY(0deg)';
+  pages[currentPage].classList.add('glow');
+
+  if(soundOn) sounds.sparkle.play();
 }
 
-let sparkles = [];
-for(let i=0;i<30;i++) sparkles.push(new Sparkle(0,0));
+document.getElementById('nextBtn').addEventListener('click', flipPage);
 
-function animateSparkles(){
-  sparkleCtx.clearRect(0,0,sparkleCanvas.width,sparkleCanvas.height);
-  // Only show sparkles on last page
-  if(currentPage === allPages.length){
-    const rect = pookieText.getBoundingClientRect();
-    sparkles.forEach(s=>{
-      s.setOrigin(rect.left + rect.width/2, rect.top + rect.height/2);
-      s.update();
-    });
-  }
-  requestAnimationFrame(animateSparkles);
-}
-animateSparkles();
+/* RESET BUTTON */
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  if(soundOn) sounds.close.play();
+
+  pages.forEach(p=>{
+    p.style.transform='rotateY(-180deg)';
+    p.classList.remove('glow');
+  });
+
+  currentPage = 0;
+  opened = false;
+
+  setTimeout(()=>{
+    frontCover.style.transform='rotateY(0deg)';
+  },300);
+});
+
+/* SOUND TOGGLE */
+const soundToggle = document.getElementById('soundToggle');
+soundToggle.addEventListener('click',()=>{
+  soundOn = !soundOn;
+  soundToggle.textContent = soundOn ? "🔊" : "🔇";
+});
 </script>
+
 </body>
 </html>
