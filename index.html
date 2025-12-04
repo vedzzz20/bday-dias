@@ -99,18 +99,26 @@ body, html {
   pointer-events: none;
 }
 
-/* -------------------- BOOK -------------------- */
-/* KEEP EXACT BOOK CODE */
-#bookContainer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.85);
-  perspective: 2000px;
-  z-index: 20;
-  margin-top: 0; /* overridden by scroll later */
+/* BOOK SECTION WRAPPER */
+#bookSection {
+  position: relative;
+  width: 100%;
+  min-height: 100vh; /* at least one screen tall */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
+/* BOOK CONTAINER (adjusted for scroll) */
+#bookContainer {
+  position: relative !important;
+  transform: scale(0.85) !important;
+  top: auto !important;
+  left: auto !important;
+}
+
+/* -------------------- BOOK -------------------- */
 #book {
   width: 420px;
   height: 550px;
@@ -175,10 +183,8 @@ body, html {
 
 /* BUTTON */
 #nextPage {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
+  margin-top: 20px;
   padding: 15px 30px;
   font-size: 30px;
   border: none;
@@ -191,8 +197,7 @@ body, html {
   z-index: 30;
 }
 
-#nextPage:hover { transform: translateX(-50%) scale(1.1); }
-
+#nextPage:hover { transform: scale(1.1); }
 </style>
 </head>
 <body>
@@ -203,11 +208,11 @@ body, html {
 </audio>
 
 <!-- LANDING PAGE -->
-<div id="landing">
+<section id="landing">
   <h1>Happy 15th Birthday, Dias 🎀💖</h1>
   <p>You’re stepping into your magical world ✨</p>
   <button id="enterBtn">Enter</button>
-</div>
+</section>
 
 <!-- FLOATING HEARTS -->
 <script>
@@ -226,29 +231,28 @@ for(let i=0;i<40;i++){
 <!-- CANVAS BACKGROUND -->
 <canvas id="canvas"></canvas>
 
-<!-- BOOK -->
-<div id="bookContainer">
-  <div id="book">
-    <div class="bookCover" id="frontCover">
-      🤍
-      <div style="font-size:70px">🎀</div>
-    </div>
-
-    <div class="bookCover" id="backCover"></div>
-
-    <div class="page" id="page1"><h2>DIAS</h2><p>The one and ONLY...</p></div>
-    <div class="page" id="page2"><h2>F1</h2><p>Speed, style, chaos… that’s you!</p></div>
-    <div class="page" id="page3"><h2>Music & Dance 🎶💃</h2><p>Your energy could power an entire grid.</p></div>
-    <div class="page" id="page4"><h2>Food 🍰🍜</h2><p>Certified foodie + certified adorable combo.</p></div>
-    <div class="page" id="page5"><h2>Books & Poetry 📖</h2><p style="font-style:italic;">“Your smile is soft rain, your laugh is sunshine.”</p></div>
-    <div class="page" id="page6">
-      <h2>From Pookie 💖🎀</h2>
-      <p>Happy 15th Birthday, Dias! You make life warm and sparkly.</p>
+<!-- BOOK SECTION -->
+<section id="bookSection">
+  <div id="bookContainer">
+    <div id="book">
+      <div class="bookCover" id="frontCover">
+        🤍
+        <div style="font-size:70px">🎀</div>
+      </div>
+      <div class="bookCover" id="backCover"></div>
+      <div class="page" id="page1"><h2>DIAS</h2><p>The one and ONLY...</p></div>
+      <div class="page" id="page2"><h2>F1</h2><p>Speed, style, chaos… that’s you!</p></div>
+      <div class="page" id="page3"><h2>Music & Dance 🎶💃</h2><p>Your energy could power an entire grid.</p></div>
+      <div class="page" id="page4"><h2>Food 🍰🍜</h2><p>Certified foodie + certified adorable combo.</p></div>
+      <div class="page" id="page5"><h2>Books & Poetry 📖</h2><p style="font-style:italic;">“Your smile is soft rain, your laugh is sunshine.”</p></div>
+      <div class="page" id="page6">
+        <h2>From Pookie 💖🎀</h2>
+        <p>Happy 15th Birthday, Dias! You make life warm and sparkly.</p>
+      </div>
     </div>
   </div>
-</div>
-
-<button id="nextPage">>>></button>
+  <button id="nextPage">>>></button>
+</section>
 
 <script>
 /* ---------- CANVAS ANIMATION ----------- */
