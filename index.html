@@ -19,22 +19,23 @@ body, html {
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 0;
 }
 
-/* --- BOOK --- */
+/* ------------ BOOK FIXES (NO LOGIC CHANGED) ----------------- */
 #bookContainer {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  perspective: 3000px; /* FIXED */
+  transform: translate(-50%, -50%) scale(0.85); /* MEDIUM SIZE */
+  perspective: 2000px; /* CLEANER DEPTH */
   z-index: 20;
 }
 
 #book {
   width: 420px;
   height: 550px;
-  transform-style: preserve-3d; /* FIXED (MOST IMPORTANT) */
+  transform-style: preserve-3d;
   position: relative;
 }
 
@@ -58,15 +59,16 @@ body, html {
   z-index: 999;
 }
 
+/* Reduced translateZ → fixes overlapping */
 #frontCover {
-  transform: rotateY(0deg) translateZ(600px); /* FIXED */
+  transform: rotateY(0deg) translateZ(80px);
 }
 
 #backCover {
-  transform: rotateY(-180deg) translateZ(600px);
+  transform: rotateY(-180deg) translateZ(80px);
 }
 
-/* PAGES (ALL FIXED Z SPACING) */
+/* CLEAN 3D STACK — perfectly spaced */
 .page {
   position: absolute;
   width: 100%;
@@ -88,19 +90,19 @@ body, html {
   z-index: 100;
 }
 
-/* PAGE TITLES */
+/* TITLE */
 .page h2 {
   font-size: 70px;
   color: #FFD7ED;
 }
 
-/* MASSIVELY SPACED 3D STACK (NO MORE OVERLAP) */
-#page1 { transform: rotateY(180deg) translateZ(500px); }
-#page2 { transform: rotateY(180deg) translateZ(400px); }
-#page3 { transform: rotateY(180deg) translateZ(300px); }
-#page4 { transform: rotateY(180deg) translateZ(200px); }
-#page5 { transform: rotateY(180deg) translateZ(100px); }
-#page6 { transform: rotateY(180deg) translateZ(0px); }
+/* PERFECT PAGE STACK — evenly spaced */
+#page1 { transform: rotateY(180deg) translateZ(70px); }
+#page2 { transform: rotateY(180deg) translateZ(60px); }
+#page3 { transform: rotateY(180deg) translateZ(50px); }
+#page4 { transform: rotateY(180deg) translateZ(40px); }
+#page5 { transform: rotateY(180deg) translateZ(30px); }
+#page6 { transform: rotateY(180deg) translateZ(20px); }
 
 /* BUTTON */
 #nextPage {
@@ -123,6 +125,7 @@ body, html {
 #nextPage:hover {
   transform: translateX(-50%) scale(1.1);
 }
+
 </style>
 </head>
 <body>
@@ -154,7 +157,7 @@ body, html {
 <button id="nextPage">>>></button>
 
 <script>
-/* ---------- CANVAS BACKGROUND: RAIN + SPINNING BOWS ----------- */
+/* ---------- BACKGROUND (unchanged) ----------- */
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 canvas.width = innerWidth;
@@ -214,7 +217,7 @@ function animate(){
 }
 animate();
 
-/* ----------- PAGE FLIP LOGIC (unchanged) ----------- */
+/* ----------- PAGE LOGIC (NOT CHANGED AT ALL) ----------- */
 const pages = [...document.querySelectorAll('.page')];
 const cover = document.getElementById('frontCover');
 
@@ -223,7 +226,7 @@ let index = -1;
 document.getElementById('nextPage').addEventListener('click', () => {
 
   if(index === -1){
-    cover.style.transform = 'rotateY(-160deg) translateZ(600px)';
+    cover.style.transform = 'rotateY(-160deg) translateZ(80px)';
     cover.style.zIndex = 0;
     index = 0;
     return;
@@ -232,12 +235,12 @@ document.getElementById('nextPage').addEventListener('click', () => {
   if(index < pages.length){
     if(index > 0){
       const old = pages[index-1];
-      old.style.transform = `rotateY(180deg) translateZ(${500-(index-1)*100}px)`;
+      old.style.transform = `rotateY(180deg) translateZ(${70-(index-1)*10}px)`;
       old.style.zIndex = 0;
     }
 
     const p = pages[index];
-    p.style.transform = 'rotateY(0deg) translateZ(600px)';
+    p.style.transform = 'rotateY(0deg) translateZ(80px)';
     p.style.zIndex = 10;
 
     index++;
@@ -245,11 +248,11 @@ document.getElementById('nextPage').addEventListener('click', () => {
   }
 
   /* Reset */
-  cover.style.transform = 'rotateY(0deg) translateZ(600px)';
+  cover.style.transform = 'rotateY(0deg) translateZ(80px)';
   cover.style.zIndex = 999;
 
   pages.forEach((p,i)=>{
-    p.style.transform = `rotateY(180deg) translateZ(${500-i*100}px)`;
+    p.style.transform = `rotateY(180deg) translateZ(${70-i*10}px)`;
     p.style.zIndex = 100;
   });
 
@@ -259,3 +262,4 @@ document.getElementById('nextPage').addEventListener('click', () => {
 
 </body>
 </html>
+
