@@ -208,7 +208,7 @@ function animate(){
 }
 animate();
 
-/* ------------------- BOOK PAGE FLIP + STACKING ------------------- */
+/* ------------------- BOOK PAGE FLIP + STACKING + DISAPPEAR PREV PAGE ------------------- */
 const allPages = [...document.querySelectorAll('.page')];
 const frontCover = document.getElementById('frontCover');
 let currentPage = -1;
@@ -218,11 +218,15 @@ document.getElementById('nextPage').addEventListener('click', () => {
     frontCover.style.transform = 'rotateY(-160deg) translateZ(40px)';
     currentPage = 0;
   } else if(currentPage < allPages.length){
-    // Move previous page behind
+    // Move previous page away
     if(currentPage > 0){
-      allPages[currentPage-1].style.zIndex = 0; 
+      const prevPage = allPages[currentPage-1];
+      prevPage.style.transform = `rotateY(180deg) translateZ(${30-(currentPage-1)*10}px)`;
+      prevPage.style.zIndex = 0;
+      prevPage.style.boxShadow = 'inset 0 0 40px rgba(0,0,0,0.3)';
     } else {
       frontCover.style.zIndex = 0;
+      frontCover.style.transform = 'rotateY(0deg) translateZ(40px)';
     }
 
     // Bring current page on top
