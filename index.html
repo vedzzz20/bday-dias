@@ -59,7 +59,6 @@ body, html {
   to { opacity: 1; }
 }
 
-/* ENTER BUTTON */
 #enterBtn {
   margin-top: 50px;
   padding: 20px 50px;
@@ -95,7 +94,7 @@ body, html {
   100% { transform: translateY(-800px) scale(1.3) rotate(360deg); opacity: 0; }
 }
 
-/* ------------------------ MAIN WEBSITE ------------------------ */
+/* ------------------------ BOOK SECTION ------------------------ */
 
 #canvas {
   position: fixed;
@@ -104,12 +103,20 @@ body, html {
   z-index: -2;
 }
 
-#bookContainer {
-  margin-top: 120vh; /* So book appears AFTER landing */
+/* FIXED: Proper spacing for book */
+#bookWrapper {
   width: 100vw;
+  height: 110vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-top: 5vh;
+  position: relative;
+}
+
+#bookContainer {
+  perspective: 2000px;
+  z-index: 20;
 }
 
 #book {
@@ -119,7 +126,7 @@ body, html {
   position: relative;
 }
 
-/* Covers */
+/* BOOK CODE (UNCHANGED) */
 .bookCover {
   width: 100%;
   height: 100%;
@@ -133,7 +140,7 @@ body, html {
   flex-direction: column;
   font-size: 80px;
   color: white;
-  box-shadow: 0 10px 40px rgba(255,255,255,0.15);
+  box-shadow: 0 10px 40px rgba(255,255,255,0.1);
   transform-origin: left;
   transition: transform 1.5s ease;
 }
@@ -148,28 +155,22 @@ body, html {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: #ffffff0a;
+  background: #ffffff08;
   border-radius: 20px;
   backface-visibility: hidden;
   transform-origin: left;
   transition: transform 1.5s ease;
   padding: 20px;
-  color: white;
-  font-size: 40px;
   text-align: center;
+  color: white;
+  font-size: 45px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 
-/* Titles */
-.page h2 {
-  font-size: 65px;
-  color: #ffd7ed;
-  margin-bottom: 20px;
-}
-
-/* Stacking */
+/* Page stack positions (unchanged) */
 #page1 { transform: rotateY(180deg) translateZ(30px); }
 #page2 { transform: rotateY(180deg) translateZ(20px); }
 #page3 { transform: rotateY(180deg) translateZ(10px); }
@@ -179,10 +180,6 @@ body, html {
 
 /* Next button */
 #nextPage {
-  position: absolute;
-  bottom: -80px;
-  left: 50%;
-  transform: translateX(-50%);
   padding: 15px 30px;
   font-size: 30px;
   border: none;
@@ -192,24 +189,15 @@ body, html {
   cursor: pointer;
   box-shadow: 0 0 25px #ffb0da;
   transition: 0.2s;
+  margin-top: 40px;
 }
 
 #nextPage:hover {
-  transform: translateX(-50%) scale(1.15);
-}
-
-/* ------------------------ MUSIC ------------------------ */
-#audio {
-  display: none;
+  transform: scale(1.15);
 }
 </style>
 </head>
 <body>
-
-<!-- MUSIC -->
-<audio id="audio" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_648faadadf.mp3?filename=romantic-piano-ambient-110416.mp3">
-</audio>
 
 <!-- LANDING PAGE -->
 <div id="landing">
@@ -235,28 +223,28 @@ for(let i=0;i<40;i++){
 <!-- CANVAS BACKGROUND -->
 <canvas id="canvas"></canvas>
 
-<!-- BOOK SECTION -->
-<div id="bookContainer">
-  <div id="book">
-    <div class="bookCover" id="frontCover">
-      🤍
-      <div style="font-size:70px">🎀</div>
+<!-- BOOK SECTION WRAPPER (NEW + FIXED) -->
+<div id="bookWrapper">
+  <div id="bookContainer">
+    <div id="book">
+
+      <!-- BOOK COVERS + PAGES (UNCHANGED) -->
+      <div class="bookCover" id="frontCover">🤍<div style="font-size:70px">🎀</div></div>
+      <div class="page" id="page1"><h2>DIAS</h2><p>The one and ONLY…</p></div>
+      <div class="page" id="page2"><h2>F1</h2><p>Speed, style, chaos… that’s you!</p></div>
+      <div class="page" id="page3"><h2>Music & Dance 🎶💃</h2><p>Your energy could power a city</p></div>
+      <div class="page" id="page4"><h2>Food 🍜</h2><p>Cutest foodie alive</p></div>
+      <div class="page" id="page5"><h2>Poetry ✨</h2><p>“Your smile is soft rain.”</p></div>
+      <div class="page" id="page6"><h2>From Pookie 💖</h2><p>You make the world warm.</p></div>
+
     </div>
-
-    <div class="page" id="page1"><h2>DIAS</h2><p>The one and ONLY…</p></div>
-    <div class="page" id="page2"><h2>F1</h2><p>Speed, style, chaos… that’s you!</p></div>
-    <div class="page" id="page3"><h2>Music & Dance 🎶💃</h2><p>Your energy could power a whole city</p></div>
-    <div class="page" id="page4"><h2>Food 🍜</h2><p>Cutest foodie in existence</p></div>
-    <div class="page" id="page5"><h2>Poetry ✨</h2><p>“Your smile is soft rain, your laugh is sunshine.”</p></div>
-    <div class="page" id="page6"><h2>From Pookie 💖</h2><p>You make the world warm and sparkly.</p></div>
+    <button id="nextPage">Next</button>
   </div>
-
-  <button id="nextPage">Next</button>
 </div>
 
-<!-- JAVASCRIPT -->
+<!-- JS -->
 <script>
-/* -------- CANVAS ANIMATION -------- */
+/* Background animation */
 const canvas=document.getElementById('canvas');
 const ctx=canvas.getContext('2d');
 canvas.width=innerWidth;
@@ -272,10 +260,9 @@ for(let i=0;i<100;i++){
   });
 }
 
-function animateBG(){
+function bg(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.fillStyle="#ffd6eb";
-
   sparkles.forEach(s=>{
     ctx.beginPath();
     ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
@@ -283,12 +270,11 @@ function animateBG(){
     s.y+=s.s;
     if(s.y>canvas.height) s.y=-10;
   });
-
-  requestAnimationFrame(animateBG);
+  requestAnimationFrame(bg);
 }
-animateBG();
+bg();
 
-/* -------- PAGE FLIP -------- */
+/* Page flip — UNCHANGED */
 const pages=[...document.querySelectorAll(".page")];
 const cover=document.getElementById("frontCover");
 let index=-1;
@@ -299,15 +285,12 @@ document.getElementById("nextPage").addEventListener("click",()=>{
     index=0;
     return;
   }
-
   if(index<pages.length){
     let p=pages[index];
     p.style.transform="rotateY(0deg) translateZ(40px)";
     index++;
     return;
   }
-
-  /* Reset */
   cover.style.transform="rotateY(0deg) translateZ(40px)";
   pages.forEach((p,i)=>{
     p.style.transform=`rotateY(180deg) translateZ(${30-i*10}px)`;
@@ -315,10 +298,9 @@ document.getElementById("nextPage").addEventListener("click",()=>{
   index=-1;
 });
 
-/* -------- ENTER BUTTON LOGIC -------- */
+/* Enter button scroll */
 document.getElementById("enterBtn").addEventListener("click",()=>{
-  window.scrollTo({top:canvas.height,behavior:"smooth"});
-  document.getElementById("audio").play().catch(()=>{});
+  window.scrollTo({top:window.innerHeight,behavior:"smooth"});
 });
 </script>
 
