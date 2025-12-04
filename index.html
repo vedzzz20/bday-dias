@@ -16,6 +16,7 @@ body, html {
   background: #1A1A1A;
   overflow-x: hidden;
   overflow-y: auto;
+  cursor: none; /* hide default cursor */
 }
 
 /* LANDING PAGE */
@@ -198,6 +199,27 @@ body, html {
 }
 
 #nextPage:hover { transform: scale(1.1); }
+
+/* CUSTOM CURSOR */
+#cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  font-size: 30px;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+}
+
+/* TRAIL */
+.trail {
+  position: fixed;
+  font-size: 25px;
+  pointer-events: none;
+  opacity: 0.8;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+}
 </style>
 </head>
 <body>
@@ -230,6 +252,9 @@ for(let i=0;i<40;i++){
 
 <!-- CANVAS BACKGROUND -->
 <canvas id="canvas"></canvas>
+
+<!-- CUSTOM CURSOR -->
+<div id="cursor">🎀</div>
 
 <!-- BOOK SECTION -->
 <section id="bookSection">
@@ -353,6 +378,31 @@ document.getElementById('nextPage').addEventListener('click', () => {
 document.getElementById("enterBtn").addEventListener("click",()=>{
   window.scrollTo({top:window.innerHeight,behavior:"smooth"});
   document.getElementById("audio").play().catch(()=>{});
+});
+
+/* -------- CUSTOM CURSOR & TRAIL -------- */
+const cursor = document.getElementById("cursor");
+const trailCount = 15;
+let trails = [];
+
+for(let i=0; i<trailCount; i++){
+  let t = document.createElement("div");
+  t.classList.add("trail");
+  t.innerText = "🎀";
+  document.body.appendChild(t);
+  trails.push({el: t, x: 0, y: 0});
+}
+
+document.addEventListener("mousemove", e=>{
+  cursor.style.top = e.clientY + "px";
+  cursor.style.left = e.clientX + "px";
+  
+  trails.forEach((t,i)=>{
+    setTimeout(()=>{
+      t.el.style.top = e.clientY + "px";
+      t.el.style.left = e.clientX + "px";
+    }, i*20);
+  });
 });
 </script>
 
