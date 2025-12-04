@@ -29,27 +29,26 @@ body, html {
   justify-content: center;
   align-items: center;
   text-align: center;
-  color: white;
 }
 
 #landing h1 {
   font-size: 90px;
-  color: #ffe4f4;
-  text-shadow: 0 0 25px #ff9ada, 0 0 40px #ff4dc4;
+  color: #d81b60; /* darker pink/magenta */
+  text-shadow: 0 0 20px #c2185b, 0 0 40px #ad1457;
   animation: glow 2.5s ease-in-out infinite alternate;
 }
 
 #landing p {
   font-size: 35px;
   margin-top: 20px;
-  color: #ffd8ef;
+  color: #c2185b;
   opacity: 0;
   animation: fadeIn 2s 1.5s forwards;
 }
 
 @keyframes glow {
-  from { text-shadow: 0 0 20px #ff8dd8; }
-  to   { text-shadow: 0 0 40px #ff4dc4; }
+  from { text-shadow: 0 0 20px #c2185b; }
+  to   { text-shadow: 0 0 40px #ad1457; }
 }
 
 @keyframes fadeIn {
@@ -62,10 +61,10 @@ body, html {
   font-size: 40px;
   border: none;
   border-radius: 20px;
-  background: #ffd3e9;
-  color: #1a1a1a;
+  background: #d81b60;
+  color: #fff;
   cursor: pointer;
-  box-shadow: 0 0 20px #ff9eda, 0 0 40px #ff4dc4;
+  box-shadow: 0 0 20px #c2185b, 0 0 40px #ad1457;
   transition: 0.3s ease;
   opacity: 0;
   animation: fadeIn 2s 2.5s forwards;
@@ -73,13 +72,13 @@ body, html {
 
 #enterBtn:hover {
   transform: scale(1.15);
-  box-shadow: 0 0 30px #ffa3e3, 0 0 50px #ff4dc4;
+  box-shadow: 0 0 30px #ad1457, 0 0 50px #880e4f;
 }
 
 /* FLOATING HEARTS */
 .heart {
   position: absolute;
-  color: #ffb2dd;
+  color: #ff1a75;
   font-size: 25px;
   animation: floatUp 6s linear infinite;
   opacity: 0.7;
@@ -162,7 +161,7 @@ body, html {
   transition: transform 1.5s ease, box-shadow .4s ease, z-index .4s ease;
   padding: 20px;
   text-align: center;
-  color: white;
+  color: #c2185b; /* darker pink text for pages */
   font-size: 45px;
   display: flex;
   flex-direction: column;
@@ -172,7 +171,7 @@ body, html {
   z-index: 100;
 }
 
-.page h2 { font-size: 70px; color: #FFD7ED; }
+.page h2 { font-size: 70px; color: #d81b60; }
 
 /* STACK */
 #page1 { transform: rotateY(180deg) translateZ(70px); }
@@ -190,10 +189,10 @@ body, html {
   font-size: 30px;
   border: none;
   border-radius: 10px;
-  background: #FFD7ED;
-  color: #1A1A1A;
+  background: #d81b60;
+  color: #fff;
   cursor: pointer;
-  box-shadow: 0 5px 15px rgba(255,215,237,0.5);
+  box-shadow: 0 5px 15px rgba(216,27,96,0.5);
   transition: transform .2s ease;
   z-index: 30;
 }
@@ -229,7 +228,7 @@ body, html {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #ff4dc4;
+  color: #880e4f; /* darker pink */
   text-align: center;
   padding: 50px 20px;
   position: relative;
@@ -239,19 +238,19 @@ body, html {
 #birthdayMessage h1 {
   font-size: 60px;
   margin-bottom: 30px;
-  text-shadow: 0 0 25px #ff9ada, 0 0 40px #ff4dc4;
+  color: #880e4f;
+  text-shadow: 0 0 20px #ad1457, 0 0 40px #880e4f;
 }
 
 #birthdayMessage p {
   font-size: 30px;
-  margin: 10px 0;
+  color: #880e4f;
 }
 
 #birthdayMessage h2 {
   font-size: 45px;
-  margin: 20px 0;
-  color: #ff80c8;
-  text-shadow: 0 0 15px #ff9ada;
+  color: #ad1457;
+  text-shadow: 0 0 15px #880e4f;
 }
 </style>
 </head>
@@ -359,7 +358,7 @@ class Bow {
     ctx.save();
     ctx.translate(this.x, this.y);
     ctx.rotate(this.a);
-    ctx.fillStyle = '#FFD7ED';
+    ctx.fillStyle = '#d81b60';
     ctx.beginPath();
     ctx.moveTo(0,-this.size/2);
     ctx.lineTo(-this.size/2,0);
