@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Book Fix</title>
+<title>Happy 15th, Dias!</title>
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Emilys+Candy&display=swap');
 
@@ -11,46 +12,26 @@ body, html {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  font-family: 'Emilys Candy', cursive;
+  font-family: 'Emilys+Candy', cursive;
   background: #1A1A1A;
 }
 
-/* Rain Canvas BEHIND book */
-#canvas {
+/* CANVAS BG EFFECTS */
+#bgCanvas {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: 0; /* behind all */
 }
 
-/* BOOK CONTAINER (ON TOP) */
+/* BOOK CONTAINER */
 #bookContainer {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   perspective: 2000px;
-  z-index: 10;
-}
-
-/* BUTTON */
-#flipBtn {
-  position: absolute;
-  bottom: 40px;
-  right: 40px;
-  z-index: 20;
-  background: #ff7cd8;
-  color: white;
-  border: none;
-  padding: 15px 22px;
-  font-size: 28px;
-  border-radius: 12px;
-  cursor: pointer;
-  box-shadow: 0 0 10px #ff7cd8aa;
-}
-#flipBtn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 20px #ff7cd8ff;
+  z-index: 10; /* ABOVE BG */
 }
 
 /* BOOK */
@@ -59,10 +40,9 @@ body, html {
   height: 550px;
   transform-style: preserve-3d;
   position: relative;
-  cursor: pointer;
 }
 
-/* HARD COVER */
+/* COVERS */
 .bookCover {
   width: 100%;
   height: 100%;
@@ -77,177 +57,200 @@ body, html {
   font-size: 80px;
   color: white;
   transform-origin: left;
-  box-shadow: 0 10px 40px rgba(255,255,255,0.1);
-}
-
-#frontCover {
+  transition: transform 1.5s ease;  
   z-index: 30;
 }
-#backCover {
-  transform: rotateY(-180deg);
-  background: #ffffff10;
+
+.bookCover h1 { 
+  margin: 0; 
+  font-size: 100px; 
 }
 
-/* PAGES — STACKED */
+#backCover {
+  transform: rotateY(-180deg);
+  z-index: 1;
+}
+
+/* PAGES */
 .page {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: #ffffff10;
+  background: #ffffff08;
   border-radius: 20px;
   backface-visibility: hidden;
   transform-origin: left;
+  transition: transform 1.4s ease;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 20px;
-  color: white;
-  font-size: 40px;
   text-align: center;
-  box-shadow: inset 0 0 30px rgba(0,0,0,0.4);
-  transition: transform 1.2s ease;
+  color: white;
+  font-size: 45px;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.3);
+  transform: rotateY(-179deg); /* start closed */
 }
 
-/* Each page slightly further back */
-.page:nth-child(3) { z-index: 29; }
-.page:nth-child(4) { z-index: 28; }
-.page:nth-child(5) { z-index: 27; }
-.page:nth-child(6) { z-index: 26; }
-.page:nth-child(7) { z-index: 25; }
-
 .page h2 {
-  font-size: 65px;
+  font-size: 70px; 
   color: #FFD7ED;
-  margin-top: -20px;
+}
+
+#nextBtn {
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
+  z-index: 50;
+  background: #ff89c4;
+  color: #fff;
+  border: none;
+  font-size: 32px;
+  padding: 12px 20px;
+  border-radius: 14px;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 0 15px #ffb2dd;
+  transition: 0.25s;
+}
+#nextBtn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 25px #ffcdea;
 }
 </style>
 </head>
+
 <body>
 
-<canvas id="canvas"></canvas>
-
-<!-- BUTTON -->
-<button id="flipBtn">➡️</button>
+<canvas id="bgCanvas"></canvas>
 
 <!-- BOOK -->
 <div id="bookContainer">
   <div id="book">
-
     <div class="bookCover" id="frontCover">
       🤍
-      <div style="font-size: 70px; margin-top:-35px;">🎀</div>
+      <div style="font-size:70px;margin-top:-40px;">🎀</div>
     </div>
-
     <div class="bookCover" id="backCover"></div>
 
-    <!-- Pages -->
-    <div class="page"><h2>DIAS</h2><p>The one and ONLY…</p></div>
-    <div class="page"><h2>F1</h2><p>Speed, style, chaos…</p></div>
-    <div class="page"><h2>Dance 🎶💃</h2><p>Your energy is unreal!</p></div>
-    <div class="page"><h2>Food 🍜</h2><p>Full-time foodie</p></div>
-    <div class="page"><h2>Poetry 📖</h2><p>“Your smile wins.”</p></div>
-    <div class="page"><h2>Happy 15th!</h2><p>✨</p></div>
-
+    <div class="page"><h2>DIAS</h2><p>The one and ONLY...</p></div>
+    <div class="page"><h2>F1</h2><p>Speed, style, chaos… that’s you!</p></div>
+    <div class="page"><h2>Music & Dance 🎶💃</h2><p>Your energy could power an F1 team!</p></div>
+    <div class="page"><h2>Food 🍰🍜</h2><p>Chef Dias: Certified foodie, part-time chaos engine.</p></div>
+    <div class="page"><h2>Books & Poetry 📖</h2>
+      <p style="font-style:italic;">
+        “Dias, your smile shines brighter than rain on leaves,<br>
+        Every laugh of yours, the heart believes.”
+      </p>
+    </div>
+    <div class="page"><h2>From Vedant 💖</h2><p>Happy 15th Birthday, Dias! You make the world feel cozy and fun just by being you.</p></div>
   </div>
 </div>
 
-<script>
-/* ------------ BACKGROUND RAIN + HEARTS + BOWS --------------- */
+<button id="nextBtn">≫</button>
 
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-canvas.width = innerWidth;
-canvas.height = innerHeight;
+<script>
+/* ---------------------------------------------------
+   BACKGROUND CANVAS: Rain + Hearts + Bows
+--------------------------------------------------- */
+const bgCanvas = document.getElementById("bgCanvas");
+const bg = bgCanvas.getContext("2d");
+
+bgCanvas.width = innerWidth;
+bgCanvas.height = innerHeight;
 
 let rain = [];
-for (let i=0; i<150; i++)
-  rain.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, l:10+Math.random()*25, s:2+Math.random()*3});
-
-class Bow {
-  constructor(){
-    this.x = Math.random()*canvas.width;
-    this.y = Math.random()*canvas.height;
-    this.size = 20 + Math.random()*20;
-    this.a = Math.random()*Math.PI*2;
-    this.s = 0.02 + Math.random()*0.03;
-  }
-  draw(){
-    ctx.save();
-    ctx.translate(this.x, this.y);
-    ctx.rotate(this.a);
-    ctx.fillStyle = '#FFD7ED';
-    ctx.beginPath();
-    ctx.moveTo(0, -this.size/2);
-    ctx.lineTo(-this.size/2, 0);
-    ctx.lineTo(0, this.size/2);
-    ctx.lineTo(this.size/2, 0);
-    ctx.closePath();
-    ctx.fill();
-    ctx.restore();
-  }
-  update(){ this.a += this.s; this.draw(); }
+for (let i=0;i<160;i++) {
+  rain.push({x:Math.random()*bgCanvas.width,y:Math.random()*bgCanvas.height,l:10+Math.random()*20,s:2+Math.random()*4});
 }
 
-class Heart {
-  constructor(){
-    this.x = Math.random()*canvas.width;
-    this.y = canvas.height + Math.random()*200;
-    this.size = 15 + Math.random()*20;
-    this.speed = 1 + Math.random()*2;
-  }
-  draw(){
-    ctx.fillStyle = "#ff7cd8";
-    ctx.beginPath();
-    ctx.moveTo(this.x, this.y);
-    ctx.bezierCurveTo(this.x-10, this.y-10, this.x-this.size, this.y+5, this.x, this.y+this.size);
-    ctx.bezierCurveTo(this.x+this.size, this.y+5, this.x+10, this.y-10, this.x, this.y);
-    ctx.fill();
-  }
-  update(){
-    this.y -= this.speed;
-    if (this.y < -20) this.y = canvas.height + 50;
-    this.draw();
-  }
+let hearts = [];
+for (let i=0;i<12;i++){
+  hearts.push({x:Math.random()*bgCanvas.width,y:Math.random()*bgCanvas.height,size:20+Math.random()*20,spd:0.4+Math.random()*0.6});
 }
 
-let bows = Array.from({length: 12}, () => new Bow());
-let hearts = Array.from({length: 20}, () => new Heart());
+let bows = [];
+for (let i=0;i<10;i++){
+  bows.push({x:Math.random()*bgCanvas.width,y:Math.random()*bgCanvas.height,a:Math.random()*Math.PI*2,size:20+Math.random()*20,s:0.01+Math.random()*0.02});
+}
 
-function animate(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+function drawBG(){
+  bg.clearRect(0,0,bgCanvas.width,bgCanvas.height);
 
-  // Rain
-  ctx.strokeStyle = '#A9C6FF';
-  ctx.lineWidth = 2;
-  rain.forEach(r => {
-    ctx.beginPath();
-    ctx.moveTo(r.x, r.y);
-    ctx.lineTo(r.x, r.y + r.l);
-    ctx.stroke();
-    r.y += r.s;
-    if (r.y > canvas.height) r.y = -r.l;
+  // rain
+  bg.strokeStyle="#A9C6FF";
+  bg.lineWidth=2;
+  rain.forEach(r=>{
+    bg.beginPath();
+    bg.moveTo(r.x,r.y);
+    bg.lineTo(r.x,r.y+r.l);
+    bg.stroke();
+    r.y+=r.s;
+    if(r.y>bgCanvas.height) r.y=-r.l;
   });
 
-  bows.forEach(b => b.update());
-  hearts.forEach(h => h.update());
+  // hearts
+  hearts.forEach(h=>{
+    bg.fillStyle="#FF7EBB";
+    bg.font=`${h.size}px Emilys Candy`;
+    bg.fillText("💖", h.x, h.y);
+    h.y -= h.spd;
+    if(h.y < -40) { h.y = bgCanvas.height+40; }
+  });
 
-  requestAnimationFrame(animate);
+  // bows
+  bows.forEach(b=>{
+    bg.save();
+    bg.translate(b.x,b.y);
+    bg.rotate(b.a);
+    bg.fillStyle="#FFD7ED";
+    bg.beginPath();
+    bg.moveTo(0,-b.size/2);
+    bg.lineTo(-b.size/2,0);
+    bg.lineTo(0,b.size/2);
+    bg.lineTo(b.size/2,0);
+    bg.closePath();
+    bg.fill();
+    bg.restore();
+    b.a+=b.s;
+  });
+
+  requestAnimationFrame(drawBG);
 }
-animate();
+drawBG();
 
-/* ------------ BOOK FLIP LOGIC --------------- */
-const pages = document.querySelectorAll('.page');
+/* ---------------------------------------------------
+   BOOK PAGE FLIP FIX + STACK ORDER
+--------------------------------------------------- */
+const pages = document.querySelectorAll(".page");
+const frontCover = document.getElementById("frontCover");
+
 let pageIndex = 0;
+let bookOpened = false;
 
-pages.forEach((p, i) => p.style.transform = "rotateY(0deg)");
+/* FIX #2: Proper Z-index stacking so pages never overlap weirdly */
+pages.forEach((pg, i) => {
+  pg.style.zIndex = 25 - i;  // <- The magic fix
+});
 
-document.getElementById('flipBtn').onclick = () => {
+/* OPEN COVER ON FIRST CLICK */
+frontCover.addEventListener("click", () => {
+  if (!bookOpened) {
+    frontCover.style.transform = "rotateY(-160deg)";
+    bookOpened = true;
+  }
+});
+
+/* BUTTON TO FLIP ONE PAGE ONLY */
+document.getElementById("nextBtn").addEventListener("click", () => {
+  if (!bookOpened) return;
+
   if (pageIndex < pages.length) {
-    pages[pageIndex].style.transform = "rotateY(-180deg)";
+    pages[pageIndex].style.transform = "rotateY(-160deg)";  
     pageIndex++;
   }
-};
+});
 </script>
 
 </body>
