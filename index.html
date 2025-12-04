@@ -4,254 +4,143 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Happy 15th, Dias!</title>
-
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Emilys+Candy&display=swap');
 
 body, html {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  font-family: 'Emilys+Candy', cursive;
-  background: #1A1A1A;
+  margin:0; padding:0; overflow:hidden;
+  font-family:'Emilys Candy', cursive; background:#1A1A1A;
 }
+#canvas { position:absolute; top:0; left:0; z-index:0; }
 
-/* CANVAS BG EFFECTS */
-#bgCanvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 0; /* behind all */
-}
-
-/* BOOK CONTAINER */
+/* --- 3D BOOK --- */
 #bookContainer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  perspective: 2000px;
-  z-index: 10; /* ABOVE BG */
+  position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);
+  perspective:2000px; z-index:10;
 }
-
-/* BOOK */
-#book {
-  width: 420px;
-  height: 550px;
-  transform-style: preserve-3d;
-  position: relative;
+#book { width:420px; height:550px; transform-style:preserve-3d; position:relative; cursor:pointer; }
+.bookCover, .page {
+  width:100%; height:100%; position:absolute; backface-visibility:hidden;
+  border-radius:20px; display:flex; justify-content:center; align-items:center;
+  flex-direction:column; text-align:center; color:white; box-shadow:0 10px 40px rgba(0,0,0,0.3);
+  font-family:'Emilys Candy', cursive;
 }
+.bookCover { background:#ffffff15; font-size:80px; transform-origin:left; transition:transform 1.5s ease; }
+.bookCover h1 { margin:0; font-size:100px; }
+.bookCover .bow { font-size:70px; margin-top:-40px; }
+#backCover { transform:rotateY(-180deg); background:#ffffff10; }
 
-/* COVERS */
-.bookCover {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  backface-visibility: hidden;
-  background: #ffffff15;
-  border-radius: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  font-size: 80px;
-  color: white;
-  transform-origin: left;
-  transition: transform 1.5s ease;  
-  z-index: 30;
+.page { background:#ffffff08; font-size:45px; transform-origin:left; transition:transform 1s ease; padding:20px; box-shadow:inset 0 0 40px rgba(0,0,0,0.3); }
+.page h2 { font-size:70px; color:#FFD7ED; margin:10px 0; }
+.page p { font-size:40px; margin:5px 0; }
+.page.glow { box-shadow:0 0 30px #FFD7ED, 0 0 50px #FFB8FF; }
+
+/* --- Bookmark Ribbon --- */
+#bookmark {
+  position:absolute; top:20px; right:10px; width:30px; height:100px; background:#FF69B4;
+  clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%);
+  z-index:15;
+  display:flex; justify-content:center; align-items:flex-start; font-size:30px;
 }
+#bookmark .bow { margin-top:5px; font-size:25px; }
 
-.bookCover h1 { 
-  margin: 0; 
-  font-size: 100px; 
-}
-
-#backCover {
-  transform: rotateY(-180deg);
-  z-index: 1;
-}
-
-/* PAGES */
-.page {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: #ffffff08;
-  border-radius: 20px;
-  backface-visibility: hidden;
-  transform-origin: left;
-  transition: transform 1.4s ease;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  text-align: center;
-  color: white;
-  font-size: 45px;
-  box-shadow: inset 0 0 40px rgba(0,0,0,0.3);
-  transform: rotateY(-179deg); /* start closed */
-}
-
-.page h2 {
-  font-size: 70px; 
-  color: #FFD7ED;
-}
-
+/* --- Page turn button --- */
 #nextBtn {
-  position: absolute;
-  bottom: 40px;
-  right: 40px;
-  z-index: 50;
-  background: #ff89c4;
-  color: #fff;
-  border: none;
-  font-size: 32px;
-  padding: 12px 20px;
-  border-radius: 14px;
-  cursor: pointer;
-  outline: none;
-  box-shadow: 0 0 15px #ffb2dd;
-  transition: 0.25s;
+  position:absolute; bottom:20px; right:20px; z-index:20;
+  font-size:50px; cursor:pointer; color:white;
+  user-select:none;
 }
-#nextBtn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 25px #ffcdea;
+
+/* --- Sound toggle --- */
+#soundToggle {
+  position:absolute; top:20px; left:20px; z-index:20; font-size:40px; cursor:pointer;
+  color:white;
 }
 </style>
 </head>
-
 <body>
 
-<canvas id="bgCanvas"></canvas>
+<canvas id="canvas"></canvas>
 
-<!-- BOOK -->
+<!-- 3D Book -->
 <div id="bookContainer">
   <div id="book">
-    <div class="bookCover" id="frontCover">
-      🤍
-      <div style="font-size:70px;margin-top:-40px;">🎀</div>
-    </div>
+    <div class="bookCover" id="frontCover">🤍<div class="bow">🎀</div></div>
     <div class="bookCover" id="backCover"></div>
-
-    <div class="page"><h2>DIAS</h2><p>The one and ONLY...</p></div>
-    <div class="page"><h2>F1</h2><p>Speed, style, chaos… that’s you!</p></div>
-    <div class="page"><h2>Music & Dance 🎶💃</h2><p>Your energy could power an F1 team!</p></div>
-    <div class="page"><h2>Food 🍰🍜</h2><p>Chef Dias: Certified foodie, part-time chaos engine.</p></div>
-    <div class="page"><h2>Books & Poetry 📖</h2>
-      <p style="font-style:italic;">
-        “Dias, your smile shines brighter than rain on leaves,<br>
-        Every laugh of yours, the heart believes.”
-      </p>
-    </div>
-    <div class="page"><h2>From Vedant 💖</h2><p>Happy 15th Birthday, Dias! You make the world feel cozy and fun just by being you.</p></div>
+    <div class="page" id="page1"><h2>DIAS</h2><p>The one and ONLY...</p></div>
+    <div class="page" id="page2"><h2>F1</h2><p>Speed, style, chaos… that’s you!</p></div>
+    <div class="page" id="page3"><h2>Music & Dance 🎶💃</h2><p>Your energy could power an F1 team!</p></div>
+    <div class="page" id="page4"><h2>Food 🍰🍜</h2><p>Chef Dias: Certified foodie, part-time chaos engine.</p></div>
+    <div class="page" id="page5"><h2>Books & Poetry 📖</h2><p style="font-style:italic;">“Dias, your smile shines brighter than rain on leaves,<br>Every laugh of yours, the heart believes.”</p></div>
+    <div class="page" id="page6"><h2>From Pookie 💖</h2><p>Happy 15th Birthday, Dias! You make the world feel cozy and fun just by being you.</p></div>
   </div>
+  <div id="bookmark">🎀</div>
+  <div id="nextBtn">>>></div>
+  <div id="soundToggle">🔊</div>
 </div>
 
-<button id="nextBtn">≫</button>
-
 <script>
-/* ---------------------------------------------------
-   BACKGROUND CANVAS: Rain + Hearts + Bows
---------------------------------------------------- */
-const bgCanvas = document.getElementById("bgCanvas");
-const bg = bgCanvas.getContext("2d");
+/* --- CANVAS BG --- */
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+canvas.width=innerWidth; canvas.height=innerHeight;
 
-bgCanvas.width = innerWidth;
-bgCanvas.height = innerHeight;
+let rainDrops=[], bows=[];
+for(let i=0;i<150;i++) rainDrops.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,l:10+Math.random()*20,s:2+Math.random()*3});
+function drawRain(){ ctx.strokeStyle='#A9C6FF'; ctx.lineWidth=2; rainDrops.forEach(r=>{ctx.beginPath();ctx.moveTo(r.x,r.y);ctx.lineTo(r.x,r.y+r.l);ctx.stroke(); r.y+=r.s; if(r.y>canvas.height) r.y=-r.l; }); }
 
-let rain = [];
-for (let i=0;i<160;i++) {
-  rain.push({x:Math.random()*bgCanvas.width,y:Math.random()*bgCanvas.height,l:10+Math.random()*20,s:2+Math.random()*4});
-}
+class Bow { constructor(){ this.x=Math.random()*canvas.width; this.y=Math.random()*canvas.height; this.size=20+Math.random()*20; this.a=Math.random()*Math.PI*2; this.s=0.02+Math.random()*0.03; }
+draw(){ ctx.save();ctx.translate(this.x,this.y);ctx.rotate(this.a);ctx.fillStyle='#FFD7ED';ctx.beginPath();ctx.moveTo(0,-this.size/2);ctx.lineTo(-this.size/2,0);ctx.lineTo(0,this.size/2);ctx.lineTo(this.size/2,0);ctx.closePath();ctx.fill();ctx.restore();}
+update(){this.a+=this.s; this.draw(); } }
+for(let i=0;i<12;i++) bows.push(new Bow());
 
-let hearts = [];
-for (let i=0;i<12;i++){
-  hearts.push({x:Math.random()*bgCanvas.width,y:Math.random()*bgCanvas.height,size:20+Math.random()*20,spd:0.4+Math.random()*0.6});
-}
+function animate(){ ctx.clearRect(0,0,canvas.width,canvas.height); drawRain(); bows.forEach(b=>b.update()); requestAnimationFrame(animate);}
+animate();
 
-let bows = [];
-for (let i=0;i<10;i++){
-  bows.push({x:Math.random()*bgCanvas.width,y:Math.random()*bgCanvas.height,a:Math.random()*Math.PI*2,size:20+Math.random()*20,s:0.01+Math.random()*0.02});
-}
+/* --- 3D BOOK LOGIC --- */
+const book = document.getElementById('book');
+const pages = document.querySelectorAll('.page');
+const frontCover = document.getElementById('frontCover');
+let currentPage=0, opened=false, soundOn=true;
 
-function drawBG(){
-  bg.clearRect(0,0,bgCanvas.width,bgCanvas.height);
+/* --- SOUND FX --- */
+const sounds = {
+  open: new Audio('https://freesound.org/data/previews/522/522498_1166496-lq.mp3'),
+  flip: new Audio('https://freesound.org/data/previews/331/331912_3248244-lq.mp3'),
+  sparkle: new Audio('https://freesound.org/data/previews/146/146725_2614175-lq.mp3'),
+  ribbon: new Audio('https://freesound.org/data/previews/345/345678_2437356-lq.mp3')
+};
+for(let s in sounds) sounds[s].volume=0.2;
 
-  // rain
-  bg.strokeStyle="#A9C6FF";
-  bg.lineWidth=2;
-  rain.forEach(r=>{
-    bg.beginPath();
-    bg.moveTo(r.x,r.y);
-    bg.lineTo(r.x,r.y+r.l);
-    bg.stroke();
-    r.y+=r.s;
-    if(r.y>bgCanvas.height) r.y=-r.l;
-  });
-
-  // hearts
-  hearts.forEach(h=>{
-    bg.fillStyle="#FF7EBB";
-    bg.font=`${h.size}px Emilys Candy`;
-    bg.fillText("💖", h.x, h.y);
-    h.y -= h.spd;
-    if(h.y < -40) { h.y = bgCanvas.height+40; }
-  });
-
-  // bows
-  bows.forEach(b=>{
-    bg.save();
-    bg.translate(b.x,b.y);
-    bg.rotate(b.a);
-    bg.fillStyle="#FFD7ED";
-    bg.beginPath();
-    bg.moveTo(0,-b.size/2);
-    bg.lineTo(-b.size/2,0);
-    bg.lineTo(0,b.size/2);
-    bg.lineTo(b.size/2,0);
-    bg.closePath();
-    bg.fill();
-    bg.restore();
-    b.a+=b.s;
-  });
-
-  requestAnimationFrame(drawBG);
-}
-drawBG();
-
-/* ---------------------------------------------------
-   BOOK PAGE FLIP FIX + STACK ORDER
---------------------------------------------------- */
-const pages = document.querySelectorAll(".page");
-const frontCover = document.getElementById("frontCover");
-
-let pageIndex = 0;
-let bookOpened = false;
-
-/* FIX #2: Proper Z-index stacking so pages never overlap weirdly */
-pages.forEach((pg, i) => {
-  pg.style.zIndex = 25 - i;  // <- The magic fix
-});
-
-/* OPEN COVER ON FIRST CLICK */
-frontCover.addEventListener("click", () => {
-  if (!bookOpened) {
-    frontCover.style.transform = "rotateY(-160deg)";
-    bookOpened = true;
+/* --- OPEN COVER --- */
+book.addEventListener('click',()=> {
+  if(!opened){
+    frontCover.style.transform='rotateY(-160deg)';
+    if(soundOn) sounds.open.play();
+    setTimeout(()=>{pages[currentPage].classList.add('glow');}, 1500);
+    opened=true;
   }
 });
 
-/* BUTTON TO FLIP ONE PAGE ONLY */
-document.getElementById("nextBtn").addEventListener("click", () => {
-  if (!bookOpened) return;
+/* --- NEXT BUTTON --- */
+const nextBtn = document.getElementById('nextBtn');
+nextBtn.addEventListener('click',()=> flipPage());
 
-  if (pageIndex < pages.length) {
-    pages[pageIndex].style.transform = "rotateY(-160deg)";  
-    pageIndex++;
-  }
-});
+function flipPage(){
+  pages[currentPage].classList.remove('glow');
+  pages[currentPage].style.transform='rotateY(-160deg)';
+  if(soundOn) sounds.flip.play();
+  currentPage = (currentPage+1)%pages.length;
+  pages[currentPage].style.transform='rotateY(0deg)';
+  pages[currentPage].classList.add('glow');
+  if(soundOn) sounds.sparkle.play();
+  if(currentPage===0) {frontCover.style.transform='rotateY(0deg)'; if(soundOn) sounds.ribbon.play();}
+}
+
+/* --- SOUND TOGGLE --- */
+const soundToggle = document.getElementById('soundToggle');
+soundToggle.addEventListener('click',()=>{ soundOn=!soundOn; soundToggle.textContent=soundOn?'🔊':'🔇'; });
+
 </script>
-
 </body>
 </html>
