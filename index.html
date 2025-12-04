@@ -81,7 +81,7 @@ canvas.height = window.innerHeight;
 
 // F1 Car Images
 const carImage = new Image();
-carImage.src = './car'; // placeholder, replace with actual F1 car image
+carImage.src = 'https://www.cleanpng.com/free/formula-one-car.html'; // placeholder, replace with actual F1 car image
 
 carImage.onload = () => {
   class Car {
@@ -89,7 +89,7 @@ carImage.onload = () => {
       this.x = -100;
       this.y = 100 + Math.random()*canvas.height/2;
       this.speed = 4 + Math.random()*3;
-      this.width = 200; this.height = 80;
+      this.width = 200; this.height = 100;
     }
     draw(){ ctx.drawImage(carImage,this.x,this.y,this.width,this.height); }
     update(){
@@ -174,6 +174,7 @@ carImage.onload = () => {
 </script>
 </body>
 </html>
+
 
 
 
