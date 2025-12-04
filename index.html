@@ -81,7 +81,7 @@ canvas.height = window.innerHeight;
 
 // F1 Car Images
 const carImage = new Image();
-carImage.src = 'https://media.formula1.com/image/upload/t_16by9Centre/c_lfill,w_3392/q_auto/v1740000000/fom-website/2023/Mercedes/W15%20launch/Mercedes-AMG%20W15%20E%20PERFORMANCE%20-%20Lewis%20Hamilton%20-%20Front%20Quarter.webp'; // placeholder, replace with actual F1 car image
+carImage.src = 'https://github.com/vedzzz20/bday-dias/blob/main/Mercedes-AMG%20W15%20E%20PERFORMANCE%20-%20Lewis%20Hamilton%20-%20Front%20Quarter.jpg'; // placeholder, replace with actual F1 car image
 
 carImage.onload = () => {
   class Car {
@@ -89,7 +89,7 @@ carImage.onload = () => {
       this.x = -100;
       this.y = 100 + Math.random()*canvas.height/2;
       this.speed = 4 + Math.random()*3;
-      this.width = 100; this.height = 40;
+      this.width = 200; this.height = 80;
     }
     draw(){ ctx.drawImage(carImage,this.x,this.y,this.width,this.height); }
     update(){
@@ -174,4 +174,5 @@ carImage.onload = () => {
 </script>
 </body>
 </html>
+
 
