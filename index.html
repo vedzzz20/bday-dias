@@ -72,7 +72,7 @@ body, html {
   border-radius: 20px;
   backface-visibility: hidden;
   transform-origin: left;
-  transition: transform 1.8s ease;
+  transition: transform 1.8s ease, box-shadow 0.5s ease;
   padding: 20px;
   text-align: center;
   color: white;
@@ -90,7 +90,7 @@ body, html {
   margin-bottom: 20px;
 }
 
-/* STACK PAGES BEHIND EACH OTHER (Z-DEPTH) */
+/* PAGE STACK */
 #page1 { transform: rotateY(180deg) translateZ(30px); }
 #page2 { transform: rotateY(180deg) translateZ(20px); }
 #page3 { transform: rotateY(180deg) translateZ(10px); }
@@ -123,7 +123,7 @@ body, html {
 </div>
 
 <script>
-/* --------- CANVAS BACKGROUND (RAIN + BOW SPIN) --------- */
+/* --------- CANVAS BACKGROUND (RAIN + BOWS) --------- */
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 canvas.width = innerWidth;
@@ -175,6 +175,13 @@ class Bow {
 let bows=[];
 for(let i=0;i<12;i++) bows.push(new Bow());
 
+document.addEventListener('mousemove', e => {
+  bows.forEach(b => {
+    b.x += (e.clientX - b.x) * 0.01;
+    b.y += (e.clientY - b.y) * 0.01;
+  });
+});
+
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   drawRain();
@@ -192,17 +199,27 @@ book.addEventListener('click', () => {
   if (opened) return;
   opened = true;
 
-  // Open cover
-  document.getElementById('frontCover').style.transform = 'rotateY(-160deg) translateZ(40px)';
+  const frontCover = document.getElementById('frontCover');
+  frontCover.style.transform = 'rotateY(-160deg) translateZ(40px)';
 
-  // Flip pages sequentially
   let i = 0;
-  function flip(){
-    allPages[i].style.transform = 'rotateY(0deg) translateZ(30px)';
-    setTimeout(()=>{
-      allPages[i].style.transform = 'rotateY(-160deg) translateZ(30px)';
+  function flip() {
+    const page = allPages[i];
+    page.style.transform = 'rotateY(0deg) translateZ(30px)';
+    page.style.boxShadow = '0 0 30px #FFD7ED, inset 0 0 40px rgba(0,0,0,0.3)'; // glow
+    setTimeout(() => {
+      page.style.transform = 'rotateY(-160deg) translateZ(30px)';
+      page.style.boxShadow = 'inset 0 0 40px rgba(0,0,0,0.3)';
       i++;
-      if(i < allPages.length) flip();
+      if (i < allPages.length) flip();
+      else {
+        // Reset
+        setTimeout(() => {
+          frontCover.style.transform = 'rotateY(0deg) translateZ(40px)';
+          allPages.forEach((p, idx) => p.style.transform = `rotateY(180deg) translateZ(${30-idx*10}px)`);
+          opened = false;
+        }, 2000);
+      }
     }, 4200);
   }
 
