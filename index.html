@@ -171,7 +171,7 @@ body, html {
     <div class="page" id="page3"><h2>Music & Dance 🎶💃</h2><p>Your energy could power an F1 team!</p></div>
     <div class="page" id="page4"><h2>Food 🍰🍜</h2><p>Certified foodie, part-time chaos engine.</p></div>
     <div class="page" id="page5"><h2>Books & Poetry 📖</h2><p style="font-style:italic;">“Dias, your smile shines brighter than rain on leaves,<br>Every laugh of yours, the heart believes.”</p></div>
-    <div class="page" id="page6"><h2>From Vedant 💖</h2><p>Happy 15th Birthday, Dias!</p></div>
+    <div class="page" id="page6"><h2>From Pookie 💖</h2><p>Happy 15th Birthday, Dias!</p></div>
   </div>
 </div>
 
@@ -190,3 +190,4 @@ for (let i=0;i<150;i++) rainDrops.push({x:Math.random()*canvas.width,y:Math.rand
 function drawRain(){ ctx.strokeStyle='#A9C6FF'; ctx.lineWidth=2; rainDrops.forEach(r=>{ctx.beginPath();ctx.moveTo(r.x,r.y);ctx.lineTo(r.x,r.y+r.l);ctx.stroke();r.y+=r.s;if(r.y>canvas.height) r.y=-r.l;}); }
 
 class Bow { constructor(){this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;this.size=20+Math.random()*20;this.a=Math.random()*Math.PI*2;this.s=0.02+Math.random()*0.03;} draw(){ctx.save();ctx.translate(this.x,this
+
