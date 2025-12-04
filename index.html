@@ -20,7 +20,7 @@ body, html {
   left: 0;
 }
 
-/* --- 3D BOOK --- */
+/* --- EFFECTS: GLOW + SPARKLES + HOVER --- */
 #bookContainer {
   position: absolute;
   top: 50%;
@@ -28,7 +28,13 @@ body, html {
   transform: translate(-50%, -50%);
   perspective: 2000px;
   z-index: 20;
+  transition: transform 0.4s ease, filter 0.4s ease;
 }
+#bookContainer:hover {
+  transform: translate(-50%, -52%) scale(1.03);
+  filter: drop-shadow(0 0 25px #ff94d6);
+}
+
 #book {
   width: 420px;
   height: 550px;
@@ -36,6 +42,8 @@ body, html {
   position: relative;
   cursor: pointer;
 }
+
+/* FRONT & BACK HARD COVERS */
 .bookCover {
   width: 100%;
   height: 100%;
@@ -49,112 +57,136 @@ body, html {
   flex-direction: column;
   font-size: 80px;
   color: white;
-  box-shadow: 0 10px 40px rgba(255,255,255,0.1);
+  box-shadow: 0 10px 40px rgba(255,255,255,0.15), 0 0 30px #ffbde6 inset;
   transform-origin: left;
   transition: transform 2s ease;
 }
-.bookCover h1 { margin: 0; font-size: 100px; }
-.bookCover .bow {
-  font-size: 70px;
-  margin-top: -40px;
+
+.bookCover .bow { font-size: 70px; margin-top: -40px; }
+
+#frontCover { transform: rotateY(0deg) translateZ(40px); }
+#backCover { transform: rotateY(-180deg) translateZ(40px); }
+
+/* BOOKMARK */
+#bookmark {
+  position: absolute;
+  width: 40px;
+  height: 200px;
+  background: linear-gradient(#ff69c9, #e60073);
+  right: -20px;
+  top: 40px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #ff6ac9;
+  z-index: 2000;
 }
 
-/* Back of cover */
-#backCover {
-  transform: rotateY(-180deg);
-  background: #ffffff10;
+/* SPARKLES */
+.sparkle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+  animation: sparkle 1.5s infinite ease-in-out;
+  box-shadow: 0 0 10px white;
+}
+@keyframes sparkle {
+  0% { transform: scale(0.2); opacity: 0; }
+  50% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.2); opacity: 0; }
 }
 
-/* Pages */
+/* PAGES */
 .page {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: #ffffff08;
+  background: #ffffff0d;
   border-radius: 20px;
   backface-visibility: hidden;
   transform-origin: left;
-  transition: transform 2s ease;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  transition: transform 1.2s ease;
   padding: 20px;
   text-align: center;
   color: white;
   font-size: 45px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   box-shadow: inset 0 0 40px rgba(0,0,0,0.3);
 }
-.page h2 { font-size: 70px; color: #FFD7ED; }
+.page h2 { font-size: 70px; color: #FFD7ED; margin-bottom: 20px; }
 
+/* PAGE DEPTH */
+#page1 { transform: rotateY(180deg) translateZ(30px); }
+#page2 { transform: rotateY(180deg) translateZ(20px); }
+#page3 { transform: rotateY(180deg) translateZ(10px); }
+#page4 { transform: rotateY(180deg) translateZ(0px); }
+#page5 { transform: rotateY(180deg) translateZ(-10px); }
+#page6 { transform: rotateY(180deg) translateZ(-20px); }
+
+/* HEART FLOAT */
+.heart {
+  position: absolute;
+  font-size: 20px;
+  animation: floatUp 3s ease-in forwards;
+  color: #ff8dcf;
+  text-shadow: 0 0 10px #ff4fbf;
+}
+@keyframes floatUp {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-120px) scale(1.6); opacity: 0; }
+}
+
+/* PAGE FLIP BUTTON */
+#nextBtn {
+  position: absolute;
+  right: 40px;
+  bottom: 40px;
+  font-size: 40px;
+  background: #ff9bd8;
+  padding: 10px 18px;
+  border-radius: 15px;
+  cursor: pointer;
+  color: #1A1A1A;
+  user-select: none;
+  box-shadow: 0 0 15px #ff85d2;
+}
+#nextBtn:hover { background: #ffc1eb; }
 </style>
 </head>
 <body>
 
 <canvas id="canvas"></canvas>
 
-<!-- BOOK -->
 <div id="bookContainer">
+  <div id="bookmark"></div>
   <div id="book">
-    <div class="bookCover" id="frontCover">
-      🤍
-      <div class="bow">🎀</div>
-    </div>
+    <div class="bookCover" id="frontCover">🤍<div class="bow">🎀</div></div>
     <div class="bookCover" id="backCover"></div>
 
     <div class="page" id="page1"><h2>DIAS</h2><p>The one and ONLY...</p></div>
     <div class="page" id="page2"><h2>F1</h2><p>Speed, style, chaos… that’s you!</p></div>
     <div class="page" id="page3"><h2>Music & Dance 🎶💃</h2><p>Your energy could power an F1 team!</p></div>
-    <div class="page" id="page4"><h2>Food 🍰🍜</h2><p>Chef Dias: Certified foodie, part-time chaos engine.</p></div>
+    <div class="page" id="page4"><h2>Food 🍰🍜</h2><p>Certified foodie, part-time chaos engine.</p></div>
     <div class="page" id="page5"><h2>Books & Poetry 📖</h2><p style="font-style:italic;">“Dias, your smile shines brighter than rain on leaves,<br>Every laugh of yours, the heart believes.”</p></div>
-    <div class="page" id="page6"><h2>From Pookie 💖</h2><p>Happy 15th Birthday, Dias! You make the world feel cozy and fun just by being you.</p></div>
+    <div class="page" id="page6"><h2>From Vedant 💖</h2><p>Happy 15th Birthday, Dias!</p></div>
   </div>
 </div>
 
+<div id="nextBtn">&gt;&gt;&gt;</div>
+
 <script>
-/* Canvas base from older version (rain + bows + cars) */
+/* CANVAS BACKGROUND */
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
-// Simple rain + bows (kept same)
 let rainDrops = [];
 for (let i=0;i<150;i++) rainDrops.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,l:10+Math.random()*20,s:2+Math.random()*3});
+
 function drawRain(){ ctx.strokeStyle='#A9C6FF'; ctx.lineWidth=2; rainDrops.forEach(r=>{ctx.beginPath();ctx.moveTo(r.x,r.y);ctx.lineTo(r.x,r.y+r.l);ctx.stroke();r.y+=r.s;if(r.y>canvas.height) r.y=-r.l;}); }
 
-class Bow { constructor(){this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;this.size=20+Math.random()*20;this.a=Math.random()*Math.PI*2;this.s=0.02+Math.random()*0.03;} draw(){ctx.save();ctx.translate(this.x,this.y);ctx.rotate(this.a);ctx.fillStyle='#FFD7ED';ctx.beginPath();ctx.moveTo(0,-this.size/2);ctx.lineTo(-this.size/2,0);ctx.lineTo(0,this.size/2);ctx.lineTo(this.size/2,0);ctx.closePath();ctx.fill();ctx.restore();} update(){this.a+=this.s;this.draw();}}
-let bows=[];for(let i=0;i<12;i++) bows.push(new Bow());
-
-function animate(){ ctx.clearRect(0,0,canvas.width,canvas.height); drawRain(); bows.forEach(b=>b.update()); requestAnimationFrame(animate); }
-animate();
-
-/* ---------- 3D OPENING BOOK LOGIC ---------- */
-const book = document.getElementById('book');
-const pages = document.querySelectorAll('.page');
-let opened = false;
-let currentPage = 0;
-
-book.addEventListener('click', () => {
-  if (!opened) {
-    // Open hardcover
-    document.getElementById('frontCover').style.transform = 'rotateY(-160deg)';
-    setTimeout(()=>{
-      flipPages();
-    }, 1800);
-    opened = true;
-  }
-});
-
-function flipPages(){
-  pages[currentPage].style.transform = 'rotateY(0deg)';
-  setTimeout(()=>{
-    pages[currentPage].style.transform = 'rotateY(-160deg)';
-    currentPage = (currentPage + 1) % pages.length;
-    flipPages();
-  }, 5500);
-}
-</script>
-
-</body>
-</html>
+class Bow { constructor(){this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;this.size=20+Math.random()*20;this.a=Math.random()*Math.PI*2;this.s=0.02+Math.random()*0.03;} draw(){ctx.save();ctx.translate(this.x,this
