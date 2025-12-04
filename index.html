@@ -15,7 +15,7 @@ body, html { margin:0; padding:0; overflow:hidden; font-family:'Emilys Candy', c
     font-size:200px; cursor:pointer;
     color:white; z-index:10;
 }
-#popup {
+#popup {\n    perspective: 2000px;
     position:absolute; top:50%; left:50%;
     transform:translate(-50%,-50%);
     width:80%; max-width:700px;
@@ -174,9 +174,13 @@ carImage.onload = () => {
   });
 
   function flipPage(){
+    pages.forEach(p=>p.style.transition='transform 2s ease');
     pages.forEach(p=>p.style.transform='rotateY(180deg)');
     pages[currentPage].style.transform='rotateY(0deg)';
     setTimeout(()=>{
+      currentPage=(currentPage+1)%pages.length;
+      flipPage();
+    },6000);(()=>{
       currentPage=(currentPage+1)%pages.length;
       flipPage();
     },3500);
